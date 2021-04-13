@@ -1,4 +1,4 @@
-package com.example.application;
+package com.as2flow.application;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
