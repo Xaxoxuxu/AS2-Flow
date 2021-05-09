@@ -7,6 +7,7 @@ import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -42,6 +43,7 @@ public class MainView extends AppLayout {
         addToNavbar(true, createHeaderContent());
         menu = createMenu();
         addToDrawer(createDrawerContent(menu));
+        //createHeader();
     }
 
     private Component createHeaderContent() {
@@ -56,6 +58,21 @@ public class MainView extends AppLayout {
         layout.add(viewTitle);
         layout.add(new Avatar());
         return layout;
+    }
+
+    private void createHeader() {
+        H1 logo = new H1("Vaadin CRM");
+        logo.addClassName("logo");
+
+        Anchor logout = new Anchor("logout", "Log out");
+
+        HorizontalLayout header = new HorizontalLayout(new DrawerToggle(), logo, logout);
+        header.expand(logo);
+        header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        header.setWidth("100%");
+        header.addClassName("header");
+
+        addToNavbar(header);
     }
 
     private Component createDrawerContent(Tabs menu) {
