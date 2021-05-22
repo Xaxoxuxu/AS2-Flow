@@ -19,6 +19,16 @@ public class Partner extends AbstractEntity implements Cloneable
     @NotEmpty
     private String url = "";
 
+    public Partner()
+    {}
+
+    public Partner(String name, String as2PartnerId, String url)
+    {
+        this.name = name;
+        this.as2PartnerId = as2PartnerId;
+        this.url = url;
+    }
+
     public String getName()
     {
         return name;

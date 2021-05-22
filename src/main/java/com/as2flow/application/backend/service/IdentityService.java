@@ -5,6 +5,7 @@ import com.as2flow.application.backend.repository.IdentityRepository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,9 +21,13 @@ public class IdentityService
         this.identityRepository = identityRepository;
     }
 
-    public List<Identity> findAll()
+    public List<Identity> findAll(String stringFilter)
     {
-        return identityRepository.findAll();
+        if (stringFilter == null || stringFilter.isEmpty()) {
+            return identityRepository.findAll();
+        } else {
+            return identityRepository.search(stringFilter);
+        }
     }
 
     public long count()
@@ -51,11 +56,14 @@ public class IdentityService
     {
         if (identityRepository.count() == 0)
         {
-            Identity testIdentity = new Identity();
-            testIdentity.setAs2Id("identity");
-            testIdentity.setName("identityName");
 
-            identityRepository.save(testIdentity);
+            List<Identity> identities = new ArrayList<>();
+            for (int i = 1; i <= 10; i++)
+            {
+                identities.add(new Identity("IdentityName" + i, "IdentityId" + i));
+            }
+
+            identityRepository.saveAll(identities);
         }
     }
 }

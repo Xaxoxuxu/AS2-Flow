@@ -15,6 +15,15 @@ public class Identity extends AbstractEntity implements Cloneable
     @NotEmpty
     private String as2Id = "";
 
+    public Identity()
+    {}
+
+    public Identity(String name, String as2Id)
+    {
+        this.name = name;
+        this.as2Id = as2Id;
+    }
+
     public String getName()
     {
         return name;
