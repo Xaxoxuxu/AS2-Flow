@@ -17,7 +17,7 @@
  */
 package com.as2flow.application;
 
-import com.helger.as2servlet.AS2ReceiveServlet;
+import com.as2flow.application.as2.AS2ReceiveServletCodeConfig;
 import com.helger.as2servlet.AS2WebAppListener;
 import com.helger.as2servlet.AbstractAS2ReceiveXServletHandler;
 import com.helger.as2servlet.mdn.AS2MDNReceiveServlet;
@@ -48,18 +48,18 @@ public class As2ServletConfig
   }
 
   @Bean
-  public ServletRegistrationBean <AS2ReceiveServlet> servletRegistrationBeanAS2 ()
+  public ServletRegistrationBean <AS2ReceiveServletCodeConfig> servletRegistrationBeanAS2 ()
   {
     _initScope ();
 
-    final ServletRegistrationBean <AS2ReceiveServlet> bean = new ServletRegistrationBean <> (new AS2ReceiveServlet (), "/as2");
+    final ServletRegistrationBean <AS2ReceiveServletCodeConfig> bean = new ServletRegistrationBean <> (new AS2ReceiveServletCodeConfig(), "/as2");
     final Map <String, String> aInitParams = new HashMap <> ();
-    aInitParams.put (AbstractAS2ReceiveXServletHandler.SERVLET_INIT_PARAM_AS2_SERVLET_CONFIG_FILENAME, "config/config.xml");
+    //aInitParams.put (AbstractAS2ReceiveXServletHandler.SERVLET_INIT_PARAM_AS2_SERVLET_CONFIG_FILENAME, "config/config.xml");
     bean.setInitParameters (aInitParams);
     return bean;
   }
 
-  @Bean
+  //@Bean
   public ServletRegistrationBean <AS2MDNReceiveServlet> servletRegistrationBeanMDN ()
   {
     _initScope ();
