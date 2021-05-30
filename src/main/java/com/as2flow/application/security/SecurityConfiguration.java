@@ -25,7 +25,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .requestCache().requestCache(new CustomRequestCache())
-                .and().authorizeRequests()
+                // TODO: need an alternative for as2
+                .and().authorizeRequests().antMatchers("/as2/**").anonymous().and().authorizeRequests()
                 .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
 
                 .anyRequest().authenticated()
@@ -61,7 +62,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/icons/**",
                 "/images/**",
                 "/styles/**",
-                "/h2-console/**");
+                "/h2-console/**",
+                //TODO: need alternative
+                "/as2/**");
     }
 }
 
