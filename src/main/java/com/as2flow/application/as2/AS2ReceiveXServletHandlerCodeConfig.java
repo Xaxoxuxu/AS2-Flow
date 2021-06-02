@@ -16,11 +16,11 @@
  */
 package com.as2flow.application.as2;
 
+import com.as2flow.application.backend.service.PartnershipService;
 import com.helger.as2lib.cert.CertificateFactory;
 import com.helger.as2lib.crypto.ECryptoAlgorithmCrypt;
 import com.helger.as2lib.crypto.ECryptoAlgorithmSign;
 import com.helger.as2lib.exception.AS2Exception;
-import com.helger.as2lib.partner.AbstractPartnershipFactory;
 import com.helger.as2lib.partner.Partnership;
 import com.helger.as2lib.processor.DefaultMessageProcessor;
 import com.helger.as2lib.processor.sender.AsynchMDNSenderModule;
@@ -44,6 +44,13 @@ import javax.servlet.ServletException;
  */
 public class AS2ReceiveXServletHandlerCodeConfig extends AbstractAS2ReceiveXServletHandler
 {
+    final PartnershipService partnershipService;
+
+    public AS2ReceiveXServletHandlerCodeConfig(PartnershipService partnershipService)
+    {
+        this.partnershipService = partnershipService;
+    }
+
     @Override
     @Nonnull
     protected AS2Session createAS2Session (@Nonnull final ICommonsMap <String, String> aInitParams) throws AS2Exception, ServletException
@@ -62,11 +69,11 @@ public class AS2ReceiveXServletHandlerCodeConfig extends AbstractAS2ReceiveXServ
 
         {
             // Create PartnershipFactory
-            final AbstractPartnershipFactory aPartnershipFactory = new PartnershipFactory ();
+            final H2PartnershipFactory h2PartnershipFactory = new H2PartnershipFactory(partnershipService);
 
             Partnership p = new Partnership("OpenAS2A-OpenAS2B");
-            p.setSenderAS2ID("OpenAS2A_alias");
-            p.setReceiverAS2ID("OpenAS2B_alias");
+            p.setSenderAS2ID("OpenAS2A");
+            p.setReceiverAS2ID("OpenAS2B");
             p.setProtocol("as2");
             p.setSubject("From OpenAS2A to OpenAS2B");
             p.setAS2URL("http://localhost:8080");
@@ -77,9 +84,9 @@ public class AS2ReceiveXServletHandlerCodeConfig extends AbstractAS2ReceiveXServ
             p.setReceiverX509Alias("OpenAS2B_alias");
             p.setSenderX509Alias("OpenAS2A_alias");
 
-            aPartnershipFactory.addPartnership(p);
-            aPartnershipFactory.initDynamicComponent (aSession, null);
-            aSession.setPartnershipFactory (aPartnershipFactory);
+            h2PartnershipFactory.addPartnership(p);
+            h2PartnershipFactory.initDynamicComponent (aSession, null);
+            aSession.setPartnershipFactory (h2PartnershipFactory);
         }
 
         {

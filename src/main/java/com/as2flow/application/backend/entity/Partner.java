@@ -1,5 +1,6 @@
 package com.as2flow.application.backend.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -9,24 +10,40 @@ public class Partner extends AbstractEntity implements Cloneable
 {
     @NotNull
     @NotEmpty
+    @Column(unique=true)
     private String name = "";
 
     @NotNull
     @NotEmpty
+    @Column(unique=true)
     private String as2PartnerId = "";
+
+    @NotNull
+    @NotEmpty
+    private String keyAlias = "";
 
     @NotNull
     @NotEmpty
     private String url = "";
 
-    public Partner()
-    {}
+   // @OneToMany(mappedBy = "partner")
+    //Set<PartnershipEntity> partnerships;
 
-    public Partner(String name, String as2PartnerId, String url)
+    public Partner()
+    {
+    }
+
+    public Partner(String name, String as2PartnerId, String keyAlias, String url)
     {
         this.name = name;
         this.as2PartnerId = as2PartnerId;
+        this.keyAlias = keyAlias;
         this.url = url;
+    }
+
+    public String getKeyAlias()
+    {
+        return keyAlias;
     }
 
     public String getName()
@@ -34,29 +51,14 @@ public class Partner extends AbstractEntity implements Cloneable
         return name;
     }
 
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
     public String getAs2PartnerId()
     {
         return as2PartnerId;
     }
 
-    public void setAs2PartnerId(String as2PartnerId)
-    {
-        this.as2PartnerId = as2PartnerId;
-    }
-
     public String getUrl()
     {
         return url;
-    }
-
-    public void setUrl(String url)
-    {
-        this.url = url;
     }
 
     @Override
@@ -65,6 +67,7 @@ public class Partner extends AbstractEntity implements Cloneable
         return "Partner{" +
                 "name='" + name + '\'' +
                 ", as2PartnerId='" + as2PartnerId + '\'' +
+                ", keyAlias='" + keyAlias + '\'' +
                 ", url='" + url + '\'' +
                 '}';
     }

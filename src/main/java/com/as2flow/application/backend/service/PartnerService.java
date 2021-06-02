@@ -4,8 +4,6 @@ import com.as2flow.application.backend.entity.Partner;
 import com.as2flow.application.backend.repository.PartnerRepository;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,9 +22,11 @@ public class PartnerService
 
     public List<Partner> findAll(String stringFilter)
     {
-        if (stringFilter == null || stringFilter.isEmpty()) {
+        if (stringFilter == null || stringFilter.isEmpty())
+        {
             return partnerRepository.findAll();
-        } else {
+        } else
+        {
             return partnerRepository.search(stringFilter);
         }
     }
@@ -51,20 +51,5 @@ public class PartnerService
         }
         partnerRepository.save(partner);
     }
-
-    @PostConstruct
-    public void populateTestData()
-    {
-        if (partnerRepository.count() == 0)
-        {
-
-            List<Partner> partners = new ArrayList<>();
-            for (int i = 1; i <= 10; i++)
-            {
-                partners.add(new Partner("PartnerName" + i, "PartnerId" + i, "http://localhost:6666/as2"));
-            }
-
-            partnerRepository.saveAll(partners);
-        }
-    }
 }
+

@@ -15,3 +15,5 @@ public interface PartnerRepository extends JpaRepository<Partner, Long>
             "or lower(p.url) like lower(concat('%', :searchTerm, '%'))")
     List<Partner> search(@Param("searchTerm") String searchTerm);
 }
+
+

@@ -16,6 +16,7 @@
  */
 package com.as2flow.application.as2;
 
+import com.as2flow.application.backend.service.PartnershipService;
 import com.helger.as2servlet.AS2ReceiveServlet;
 import com.helger.commons.http.EHttpMethod;
 import com.helger.xservlet.AbstractXServlet;
@@ -34,8 +35,12 @@ import javax.servlet.ServletException;
  */
 public class AS2ReceiveServletCodeConfig extends AbstractXServlet
 {
-  public AS2ReceiveServletCodeConfig ()
-  {}
+  final PartnershipService partnershipService;
+
+  public AS2ReceiveServletCodeConfig(PartnershipService partnershipService)
+  {
+    this.partnershipService = partnershipService;
+  }
 
   @Override
   @OverridingMethodsMustInvokeSuper
@@ -43,6 +48,6 @@ public class AS2ReceiveServletCodeConfig extends AbstractXServlet
   {
     // Multipart is handled specifically inside
     settings ().setMultipartEnabled (false);
-    handlerRegistry ().registerHandler (EHttpMethod.POST, new AS2ReceiveXServletHandlerCodeConfig (), false);
+    handlerRegistry ().registerHandler (EHttpMethod.POST, new AS2ReceiveXServletHandlerCodeConfig (partnershipService), false);
   }
 }
