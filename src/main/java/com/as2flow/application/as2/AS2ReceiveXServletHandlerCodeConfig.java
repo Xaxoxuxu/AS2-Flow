@@ -23,6 +23,9 @@ import com.helger.as2lib.crypto.ECryptoAlgorithmSign;
 import com.helger.as2lib.exception.AS2Exception;
 import com.helger.as2lib.partner.Partnership;
 import com.helger.as2lib.processor.DefaultMessageProcessor;
+import com.helger.as2lib.processor.receiver.AS2DirectoryPollingModule;
+import com.helger.as2lib.processor.resender.DirectoryResenderModule;
+import com.helger.as2lib.processor.sender.AS2SenderModule;
 import com.helger.as2lib.processor.sender.AsynchMDNSenderModule;
 import com.helger.as2lib.processor.storage.MessageFileModule;
 import com.helger.as2lib.session.AS2Session;
@@ -35,6 +38,10 @@ import com.helger.security.keystore.EKeyStoreType;
 
 import javax.annotation.Nonnull;
 import javax.servlet.ServletException;
+
+import static com.helger.as2lib.processor.receiver.AbstractDirectoryPollingModule.*;
+import static com.helger.as2lib.processor.resender.AbstractActiveResenderModule.ATTR_RESEND_DELAY_SECONDS;
+import static com.helger.as2lib.processor.resender.DirectoryResenderModule.ATTR_RESEND_DIRECTORY;
 
 /**
  * A special {@link AbstractAS2ReceiveBaseXServletHandler} with a code based
@@ -71,20 +78,38 @@ public class AS2ReceiveXServletHandlerCodeConfig extends AbstractAS2ReceiveXServ
             // Create PartnershipFactory
             final H2PartnershipFactory h2PartnershipFactory = new H2PartnershipFactory(partnershipService);
 
-            Partnership p = new Partnership("OpenAS2A-OpenAS2B");
-            p.setSenderAS2ID("OpenAS2A");
-            p.setReceiverAS2ID("OpenAS2B");
-            p.setProtocol("as2");
-            p.setSubject("From OpenAS2A to OpenAS2B");
-            p.setAS2URL("http://localhost:8080");
-            p.setAS2MDNTo("http://localhost:8080");
-            p.setAS2MDNOptions("signed-receipt-protocol=optional, pkcs7-signature; signed-receipt-micalg=optional, md5");
-            p.setEncryptAlgorithm(ECryptoAlgorithmCrypt.CRYPT_3DES);
-            p.setSigningAlgorithm(ECryptoAlgorithmSign.DIGEST_MD5);
-            p.setReceiverX509Alias("OpenAS2B_alias");
-            p.setSenderX509Alias("OpenAS2A_alias");
+            Partnership pReceive = new Partnership("OpenAS2A-OpenAS2B");
+            pReceive.setSenderAS2ID("OpenAS2A");
+            pReceive.setReceiverAS2ID("OpenAS2B");
+            pReceive.setProtocol("as2");
+            pReceive.setSubject("From OpenAS2A to OpenAS2B");
+            pReceive.setAS2URL("http://localhost:8081");
+            pReceive.setAS2MDNTo("http://localhost:8081");
+            pReceive.setAS2MDNOptions("signed-receipt-protocol=optional, pkcs7-signature; signed-receipt-micalg=optional, md5");
+            pReceive.setEncryptAlgorithm(ECryptoAlgorithmCrypt.CRYPT_3DES);
+            pReceive.setSigningAlgorithm(ECryptoAlgorithmSign.DIGEST_MD5);
+            pReceive.setReceiverX509Alias("OpenAS2B_alias");
+            pReceive.setSenderX509Alias("OpenAS2A_alias");
+            pReceive.setSenderEmail("sender@sender.com");
+            pReceive.setReceiverEmail("receiver@receiver.com");
 
-            h2PartnershipFactory.addPartnership(p);
+            Partnership pSend = new Partnership("OpenAS2B-OpenAS2A");
+            pSend.setSenderAS2ID("OpenAS2B");
+            pSend.setReceiverAS2ID("OpenAS2A");
+            pSend.setProtocol("as2");
+            pSend.setSubject("From OpenAS2B to OpenAS2A");
+            pSend.setAS2URL("http://localhost:8081");
+            pSend.setAS2MDNTo("http://localhost:8081");
+            pSend.setAS2MDNOptions("signed-receipt-protocol=optional, pkcs7-signature; signed-receipt-micalg=optional, md5");
+            pSend.setEncryptAlgorithm(ECryptoAlgorithmCrypt.CRYPT_3DES);
+            pSend.setSigningAlgorithm(ECryptoAlgorithmSign.DIGEST_MD5);
+            pSend.setReceiverX509Alias("OpenAS2A_alias");
+            pSend.setSenderX509Alias("OpenAS2B_alias");
+            pSend.setSenderEmail("sender@sender.com");
+            pSend.setReceiverEmail("receiver@receiver.com");
+
+            h2PartnershipFactory.addPartnership(pReceive);
+            h2PartnershipFactory.addPartnership(pSend);
             h2PartnershipFactory.initDynamicComponent (aSession, null);
             aSession.setPartnershipFactory (h2PartnershipFactory);
         }
@@ -96,26 +121,6 @@ public class AS2ReceiveXServletHandlerCodeConfig extends AbstractAS2ReceiveXServ
             aMessageProcessor.setPendingMDNInfoFolder ("data/pendinginfoMDN");
             aMessageProcessor.initDynamicComponent (aSession, null);
             aSession.setMessageProcessor (aMessageProcessor);
-
-            /**
-             * Required to receive messages port is required internally - simply
-             * ignore it for servlets
-             */
-            {
-                final AS2ServletReceiverModule aModule = new AS2ServletReceiverModule ();
-                //aModule.setPort(8080);
-                aModule.setErrorDirectory ("data/inbox/error");
-                aModule.setErrorFormat ("$msg.sender.as2_id$, $msg.receiver.as2_id$, $msg.headers.message-id$");
-                aModule.initDynamicComponent (aSession, null);
-                aMessageProcessor.addModule (aModule);
-            }
-
-            /** Only needed to receive asynchronous MDNs */
-            {
-                final AS2ServletMDNReceiverModule aModule = new AS2ServletMDNReceiverModule ();
-                aModule.initDynamicComponent (aSession, null);
-                aMessageProcessor.addModule (aModule);
-            }
 
             /** Below module is used to send async mdn */
             {
@@ -142,7 +147,56 @@ public class AS2ReceiveXServletHandlerCodeConfig extends AbstractAS2ReceiveXServ
                 aModule.initDynamicComponent (aSession, null);
                 aMessageProcessor.addModule (aModule);
             }
-            // Add further modules if you need them
+
+            {
+                final AS2DirectoryPollingModule aModule = new AS2DirectoryPollingModule();
+                aModule.attrs().putIn(ATTR_OUTBOX_DIRECTORY, "data/toOpenAS2A");
+                aModule.attrs().putIn(ATTR_ERROR_DIRECTORY, "data/toOpenAS2A/error");
+                aModule.setInterval(1);
+                aModule.attrs().putIn(ATTR_DEFAULTS, "sender.as2_id=OpenAS2B, receiver.as2_id=OpenAS2A");
+                aModule.attrs().putIn(ATTR_MIMETYPE, "application/EDI-X12");
+                aModule.attrs().putIn(ATTR_SENDFILENAME, "true");
+                aModule.initDynamicComponent (aSession, null);
+                aMessageProcessor.addModule (aModule);
+            }
+
+            {
+                final DirectoryResenderModule aModule = new DirectoryResenderModule();
+                aModule.attrs().putIn(ATTR_RESEND_DIRECTORY, "data/resend");
+                aModule.attrs().putIn(ATTR_ERROR_DIRECTORY, "data/resend/error");
+                aModule.attrs().putIn(ATTR_RESEND_DELAY_SECONDS, 5);
+                aModule.initDynamicComponent (aSession, null);
+                aMessageProcessor.addModule (aModule);
+            }
+
+            // start polling
+            aMessageProcessor.startActiveModules();
+
+            /**
+             * Required to receive messages port is required internally - simply
+             * ignore it for servlets
+             */
+            {
+                final AS2ServletReceiverModule aModule = new AS2ServletReceiverModule ();
+                //aModule.setPort(8080);
+                aModule.setErrorDirectory ("data/inbox/error");
+                aModule.setErrorFormat ("$msg.sender.as2_id$, $msg.receiver.as2_id$, $msg.headers.message-id$");
+                aModule.initDynamicComponent (aSession, null);
+                aMessageProcessor.addModule (aModule);
+            }
+
+            /** Only needed to receive asynchronous MDNs */
+            {
+                final AS2ServletMDNReceiverModule aModule = new AS2ServletMDNReceiverModule ();
+                aModule.initDynamicComponent (aSession, null);
+                aMessageProcessor.addModule (aModule);
+            }
+
+            {
+                final AS2SenderModule aModule = new AS2SenderModule();
+                aModule.initDynamicComponent (aSession, null);
+                aMessageProcessor.addModule (aModule);
+            }
         }
 
         return aSession;

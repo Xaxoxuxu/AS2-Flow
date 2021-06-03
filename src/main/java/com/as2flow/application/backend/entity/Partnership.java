@@ -19,22 +19,22 @@ public class Partnership extends AbstractEntity implements Cloneable
     @NotNull
     @NotEmpty
     @ElementCollection(fetch=FetchType.EAGER)
-    @MapKeyColumn(name="attribute")
     @Column(name="value")
+    @MapKeyColumn(name="attribute")
     private Map<String, String> senderAttrs;
 
     @NotNull
     @NotEmpty
     @ElementCollection(fetch=FetchType.EAGER)
-    @MapKeyColumn(name="attribute")
     @Column(name="value")
+    @MapKeyColumn(name="attribute")
     private Map<String, String> receiverAttrs;
 
     @NotNull
     @NotEmpty
     @ElementCollection(fetch=FetchType.EAGER)
-    @MapKeyColumn(name="attribute")
     @Column(name="value")
+    @MapKeyColumn(name="attribute")
     private Map<String, String> attributes;
 
     public Partnership()
