@@ -15,7 +15,13 @@ public interface PartnershipRepository extends JpaRepository<Partnership, Long>
 
     @Query("select p from Partnership p " +
             "join p.senderAttrs sa " +
-            "where (KEY(sa) = :attribute " +
-            "and sa = :value)")
+            "where (lower(KEY(sa)) = lower(:attribute) " +
+            "and lower(sa) like lower(concat('%', :value, '%')))")
     List<Partnership> searchBySenderAttributes(@Param("attribute") String attribute, @Param("value") String value);
+
+    @Query("select p from Partnership p " +
+            "join p.receiverAttrs ra " +
+            "where (lower(KEY(ra)) = lower(:attribute) " +
+            "and lower(ra) like lower(concat('%', :value, '%')))")
+    List<Partnership> searchByReceiverAttributes(@Param("attribute") String attribute, @Param("value") String value);
 }

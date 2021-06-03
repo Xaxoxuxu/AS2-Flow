@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.as2flow.application.as2;
+package com.as2flow.application.backend.as2;
 
 import com.as2flow.application.backend.service.PartnershipService;
 import com.helger.as2lib.cert.CertificateFactory;
@@ -29,7 +29,6 @@ import com.helger.as2lib.processor.sender.AS2SenderModule;
 import com.helger.as2lib.processor.sender.AsynchMDNSenderModule;
 import com.helger.as2lib.processor.storage.MessageFileModule;
 import com.helger.as2lib.session.AS2Session;
-import com.helger.as2servlet.AbstractAS2ReceiveBaseXServletHandler;
 import com.helger.as2servlet.AbstractAS2ReceiveXServletHandler;
 import com.helger.as2servlet.util.AS2ServletMDNReceiverModule;
 import com.helger.as2servlet.util.AS2ServletReceiverModule;
@@ -43,12 +42,6 @@ import static com.helger.as2lib.processor.receiver.AbstractDirectoryPollingModul
 import static com.helger.as2lib.processor.resender.AbstractActiveResenderModule.ATTR_RESEND_DELAY_SECONDS;
 import static com.helger.as2lib.processor.resender.DirectoryResenderModule.ATTR_RESEND_DIRECTORY;
 
-/**
- * A special {@link AbstractAS2ReceiveBaseXServletHandler} with a code based
- * configuration. This is contained as an example only.
- *
- * @author Philip Helger
- */
 public class AS2ReceiveXServletHandlerCodeConfig extends AbstractAS2ReceiveXServletHandler
 {
     final PartnershipService partnershipService;
@@ -64,7 +57,6 @@ public class AS2ReceiveXServletHandlerCodeConfig extends AbstractAS2ReceiveXServ
     {
         final AS2Session aSession = new AS2Session ();
         {
-            // Create CertificateFactory
             final CertificateFactory aCertFactory = new CertificateFactory ();
             aCertFactory.setKeyStoreType (EKeyStoreType.PKCS12);
             aCertFactory.setFilename ("config/certs.p12");
@@ -75,7 +67,6 @@ public class AS2ReceiveXServletHandlerCodeConfig extends AbstractAS2ReceiveXServ
         }
 
         {
-            // Create PartnershipFactory
             final H2PartnershipFactory h2PartnershipFactory = new H2PartnershipFactory(partnershipService);
 
             Partnership pReceive = new Partnership("OpenAS2A-OpenAS2B");
@@ -83,15 +74,15 @@ public class AS2ReceiveXServletHandlerCodeConfig extends AbstractAS2ReceiveXServ
             pReceive.setReceiverAS2ID("OpenAS2B");
             pReceive.setProtocol("as2");
             pReceive.setSubject("From OpenAS2A to OpenAS2B");
-            pReceive.setAS2URL("http://localhost:8081");
-            pReceive.setAS2MDNTo("http://localhost:8081");
-            pReceive.setAS2MDNOptions("signed-receipt-protocol=optional, pkcs7-signature; signed-receipt-micalg=optional, md5");
+            //pReceive.setAS2URL("http://localhost:8081");
+            //pReceive.setAS2MDNTo("http://localhost:8081");
+            //pReceive.setAS2MDNOptions("signed-receipt-protocol=optional, pkcs7-signature; signed-receipt-micalg=optional, md5");
             pReceive.setEncryptAlgorithm(ECryptoAlgorithmCrypt.CRYPT_3DES);
             pReceive.setSigningAlgorithm(ECryptoAlgorithmSign.DIGEST_MD5);
             pReceive.setReceiverX509Alias("OpenAS2B_alias");
             pReceive.setSenderX509Alias("OpenAS2A_alias");
-            pReceive.setSenderEmail("sender@sender.com");
-            pReceive.setReceiverEmail("receiver@receiver.com");
+            //pReceive.setSenderEmail("sender@sender.com");
+            //pReceive.setReceiverEmail("receiver@receiver.com");
 
             Partnership pSend = new Partnership("OpenAS2B-OpenAS2A");
             pSend.setSenderAS2ID("OpenAS2B");
@@ -99,14 +90,14 @@ public class AS2ReceiveXServletHandlerCodeConfig extends AbstractAS2ReceiveXServ
             pSend.setProtocol("as2");
             pSend.setSubject("From OpenAS2B to OpenAS2A");
             pSend.setAS2URL("http://localhost:8081");
-            pSend.setAS2MDNTo("http://localhost:8081");
-            pSend.setAS2MDNOptions("signed-receipt-protocol=optional, pkcs7-signature; signed-receipt-micalg=optional, md5");
+            //pSend.setAS2MDNTo("http://localhost:8081");
+            //pSend.setAS2MDNOptions("signed-receipt-protocol=optional, pkcs7-signature; signed-receipt-micalg=optional, md5");
             pSend.setEncryptAlgorithm(ECryptoAlgorithmCrypt.CRYPT_3DES);
             pSend.setSigningAlgorithm(ECryptoAlgorithmSign.DIGEST_MD5);
             pSend.setReceiverX509Alias("OpenAS2A_alias");
             pSend.setSenderX509Alias("OpenAS2B_alias");
             pSend.setSenderEmail("sender@sender.com");
-            pSend.setReceiverEmail("receiver@receiver.com");
+            //pSend.setReceiverEmail("receiver@receiver.com");
 
             h2PartnershipFactory.addPartnership(pReceive);
             h2PartnershipFactory.addPartnership(pSend);
@@ -115,7 +106,6 @@ public class AS2ReceiveXServletHandlerCodeConfig extends AbstractAS2ReceiveXServ
         }
 
         {
-            // Create MessageProcessor
             final DefaultMessageProcessor aMessageProcessor = new DefaultMessageProcessor ();
             aMessageProcessor.setPendingMDNFolder ("data/pendingMDN");
             aMessageProcessor.setPendingMDNInfoFolder ("data/pendinginfoMDN");

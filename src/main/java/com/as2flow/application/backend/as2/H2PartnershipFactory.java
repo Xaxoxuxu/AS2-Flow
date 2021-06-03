@@ -1,4 +1,4 @@
-package com.as2flow.application.as2;
+package com.as2flow.application.backend.as2;
 
 import com.as2flow.application.backend.entity.Partnership;
 import com.as2flow.application.backend.service.PartnershipService;

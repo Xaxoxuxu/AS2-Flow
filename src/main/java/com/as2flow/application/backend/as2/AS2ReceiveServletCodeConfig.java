@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.as2flow.application.as2;
+package com.as2flow.application.backend.as2;
 
 import com.as2flow.application.backend.service.PartnershipService;
 import com.helger.as2servlet.AS2ReceiveServlet;

@@ -1,4 +1,4 @@
-package com.as2flow.application.as2;
+package com.as2flow.application.backend.as2;
 
 import com.helger.as2lib.exception.AS2Exception;
 import com.helger.as2lib.message.IMessage;

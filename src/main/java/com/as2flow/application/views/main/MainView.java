@@ -1,7 +1,8 @@
 package com.as2flow.application.views.main;
 
-import com.as2flow.application.views.drawer.identities.IdentitiesView;
-import com.as2flow.application.views.drawer.partners.PartnersView;
+import com.as2flow.application.views.drawer.partnersips.IdentitiesView;
+import com.as2flow.application.views.drawer.partnersips.PartnersView;
+import com.as2flow.application.views.drawer.partnersips.PartnershipsView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -90,8 +91,9 @@ public class MainView extends AppLayout {
 
     private Component[] createMenuItems() {
         return new Tab[]{
-                createTab("Identities", IdentitiesView.class),
-                createTab("Partners", PartnersView.class)
+                createTab("Senders", IdentitiesView.class),
+                createTab("Receivers", PartnersView.class),
+                createTab("Partnerships", PartnershipsView.class)
         };
     }
 
