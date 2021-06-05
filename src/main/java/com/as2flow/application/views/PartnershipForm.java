@@ -20,20 +20,21 @@ import com.vaadin.flow.shared.Registration;
 
 public class PartnershipForm extends FormLayout
 {
-    private TextField name = new TextField("Name");
-    private TextField senderAs2Id = new TextField("Sender AS2 ID");
-    private TextField receiverAs2Id = new TextField("Receiver AS2 ID");
-    private TextField as2Url = new TextField("AS2 URL");
-    private TextField subject = new TextField("Subject");
-    private ComboBox<ECryptoAlgorithmCrypt> cryptoAlgorithm = new ComboBox<>("Encryption Algorithm");
-    private ComboBox<ECryptoAlgorithmSign> signingAlgorithm = new ComboBox<>("Signing Algorithm");
-    private TextField senderX509Alias = new TextField("Sender certificate alias");
-    private TextField receiverX509Alias = new TextField("Receiver certificate alias");
-    private EmailField email = new EmailField("Email");
-    private Button save = new Button("Save");
-    private Button delete = new Button("Delete");
-    private Button close = new Button("Cancel");
-    private Binder<Partnership> binder = new BeanValidationBinder<>(Partnership.class);
+    TextField name = new TextField("Name");
+    TextField senderAs2Id = new TextField("Sender AS2 ID");
+    TextField receiverAs2Id = new TextField("Receiver AS2 ID");
+    TextField as2Url = new TextField("AS2 URL");
+    TextField subject = new TextField("Subject");
+    ComboBox<ECryptoAlgorithmCrypt> cryptoAlgorithm = new ComboBox<>("Encryption Algorithm");
+    ComboBox<ECryptoAlgorithmSign> signingAlgorithm = new ComboBox<>("Signing Algorithm");
+    TextField senderX509Alias = new TextField("Sender certificate alias");
+    TextField receiverX509Alias = new TextField("Receiver certificate alias");
+    EmailField senderEmail = new EmailField("Sender Email");
+    EmailField receiverEmail = new EmailField("Receiver Email");
+    Button save = new Button("Save");
+    Button delete = new Button("Delete");
+    Button close = new Button("Close");
+    Binder<Partnership> binder = new BeanValidationBinder<>(Partnership.class);
     private Partnership partnership;
 
     public PartnershipForm()
@@ -47,12 +48,16 @@ public class PartnershipForm extends FormLayout
         binder.bind(subject, Partnership::getSubject, Partnership::setSubject);
         binder.bind(senderX509Alias, Partnership::getSenderX509Alias, Partnership::setSenderX509Alias);
         binder.bind(receiverX509Alias, Partnership::getReceiverX509Alias, Partnership::setReceiverX509Alias);
-        binder.bind(email, Partnership::getEmail, Partnership::setEmail);
+        binder.bind(senderEmail, Partnership::getSenderEmail, Partnership::setSenderEmail);
+        binder.bind(receiverEmail, Partnership::getReceiverEmail, Partnership::setReceiverEmail);
+        binder.bind(cryptoAlgorithm, Partnership::getEncryptAlgorithm, Partnership::setEncryptAlgorithm);
+        binder.bind(signingAlgorithm, Partnership::getSigningAlgorithm, Partnership::setSigningAlgorithm);
 
         cryptoAlgorithm.setItems(ECryptoAlgorithmCrypt.values());
         signingAlgorithm.setItems(ECryptoAlgorithmSign.values());
 
-        add(senderAs2Id,
+        add(name,
+                senderAs2Id,
                 receiverAs2Id,
                 as2Url,
                 subject,
@@ -60,7 +65,8 @@ public class PartnershipForm extends FormLayout
                 signingAlgorithm,
                 senderX509Alias,
                 receiverX509Alias,
-                email,
+                senderEmail,
+                receiverEmail,
                 createButtonsLayout());
     }
 

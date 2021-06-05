@@ -6,9 +6,11 @@ import com.as2flow.application.views.MainView;
 import com.as2flow.application.views.PartnershipForm;
 import com.helger.as2lib.partner.CPartnershipIDs;
 import com.helger.commons.collection.attr.IStringMap;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -31,16 +33,50 @@ public class PartnershipsView extends VerticalLayout
         addClassName("list-view");
         setSizeFull();
 
-        configureFilter();
         configureGrid();
 
         partnershipForm = new PartnershipForm();
+        partnershipForm.addListener(PartnershipForm.SaveEvent.class, this::savePartnership);
+        partnershipForm.addListener(PartnershipForm.DeleteEvent.class, this::deletePartnership);
+        partnershipForm.addListener(PartnershipForm.CloseEvent.class, e -> closeEditor());
         Div content = new Div(grid, partnershipForm);
         content.addClassName("content");
         content.setSizeFull();
 
-        add(filterText, content);
+        add(getToolbar(), content);
         updateList();
+        closeEditor();
+    }
+
+    private HorizontalLayout getToolbar() {
+        filterText.setPlaceholder("Filter by name...");
+        filterText.setClearButtonVisible(true);
+        filterText.setValueChangeMode(ValueChangeMode.LAZY);
+        filterText.addValueChangeListener(e -> updateList());
+
+        Button addContactButton = new Button("Add partnership");
+        addContactButton.addClickListener(click -> addPartnership());
+
+        HorizontalLayout toolbar = new HorizontalLayout(filterText, addContactButton);
+        toolbar.addClassName("toolbar");
+        return toolbar;
+    }
+
+    void addPartnership() {
+        grid.asSingleSelect().clear();
+        editPartnership(new Partnership());
+    }
+
+    private void savePartnership(PartnershipForm.SaveEvent event) {
+        partnershipService.save(event.getPartnership());
+        updateList();
+        closeEditor();
+    }
+
+    private void deletePartnership(PartnershipForm.DeleteEvent event) {
+        partnershipService.delete(event.getPartnership());
+        updateList();
+        closeEditor();
     }
 
     private void configureFilter()
@@ -67,5 +103,23 @@ public class PartnershipsView extends VerticalLayout
             return m.getValue(CPartnershipIDs.PA_SUBJECT);
         }).setHeader("Subject");
         grid.getColumns().forEach(c -> c.setAutoWidth(true));
+        grid.asSingleSelect().addValueChangeListener(event ->
+                editPartnership(event.getValue()));
+    }
+
+    public void editPartnership(Partnership partnership) {
+        if (partnership == null) {
+            closeEditor();
+        } else {
+            partnershipForm.setPartnership(partnership);
+            partnershipForm.setVisible(true);
+            addClassName("editing");
+        }
+    }
+
+    private void closeEditor() {
+        partnershipForm.setPartnership(null);
+        partnershipForm.setVisible(false);
+        removeClassName("editing");
     }
 }
