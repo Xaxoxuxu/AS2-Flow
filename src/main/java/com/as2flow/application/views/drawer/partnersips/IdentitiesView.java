@@ -2,7 +2,7 @@ package com.as2flow.application.views.drawer.partnersips;
 
 import com.as2flow.application.backend.entity.Partnership;
 import com.as2flow.application.backend.service.PartnershipService;
-import com.as2flow.application.views.main.MainView;
+import com.as2flow.application.views.MainView;
 import com.helger.as2lib.partner.CPartnershipIDs;
 import com.helger.commons.collection.attr.IStringMap;
 import com.vaadin.flow.component.grid.Grid;

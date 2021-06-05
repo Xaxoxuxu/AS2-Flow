@@ -1,4 +1,4 @@
-package com.as2flow.application.views.main;
+package com.as2flow.application.views;
 
 import com.as2flow.application.views.drawer.partnersips.IdentitiesView;
 import com.as2flow.application.views.drawer.partnersips.PartnersView;
