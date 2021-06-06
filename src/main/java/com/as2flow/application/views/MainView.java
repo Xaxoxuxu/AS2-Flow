@@ -29,58 +29,74 @@ import java.util.Optional;
 /**
  * The main view is a top-level placeholder for other views.
  */
-@PWA(name = "AS2 Flow", shortName = "AS2 Flow", enableInstallPrompt = false)
+@PWA(name = "AS2 Flow",
+        shortName = "AS2 Flow",
+        offlineResources = {
+                "./styles/offline.css",
+                "./images/offline.png"},
+        enableInstallPrompt = false)
 @JsModule("./styles/shared-styles.js")
 @Theme(value = Lumo.class, variant = Lumo.DARK)
 @CssImport("./views/main/main-view.css")
-public class MainView extends AppLayout {
-
+public class MainView extends AppLayout
+{
     private final Tabs menu;
     private H1 viewTitle;
 
-    public MainView() {
+    public MainView()
+    {
         setPrimarySection(Section.DRAWER);
         addToNavbar(true, createHeaderContent());
         menu = createMenu();
         addToDrawer(createDrawerContent(menu));
-        //createHeader();
     }
 
-    private Component createHeaderContent() {
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.setId("header");
-        horizontalLayout.getThemeList().set("dark", true);
-        horizontalLayout.setWidthFull();
-        horizontalLayout.setSpacing(false);
-        horizontalLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-        horizontalLayout.add(new DrawerToggle());
+    private static Tab createTab(String text, Class<? extends Component> navigationTarget)
+    {
+        final Tab tab = new Tab();
+        tab.add(new RouterLink(text, navigationTarget));
+        ComponentUtil.setData(tab, Class.class, navigationTarget);
+        return tab;
+    }
+
+    private Component createHeaderContent()
+    {
+        HorizontalLayout header = new HorizontalLayout();
+        header.setId("header");
+        header.getThemeList().set("dark", true);
+        header.setWidthFull();
+        header.setSpacing(false);
+        header.setAlignItems(FlexComponent.Alignment.CENTER);
+        header.add(new DrawerToggle());
         viewTitle = new H1();
-        horizontalLayout.add(viewTitle);
+        header.add(viewTitle);
         Anchor logoutAnchor = new Anchor("logout", "Log out");
         logoutAnchor.getElement().getStyle().set("margin-left", "auto");
         logoutAnchor.getElement().getStyle().set("margin-right", "1%");
-        horizontalLayout.add(logoutAnchor);
+        header.add(logoutAnchor);
 
-        return horizontalLayout;
+        return header;
     }
 
-    private Component createDrawerContent(Tabs menu) {
-        VerticalLayout layout = new VerticalLayout();
-        layout.setSizeFull();
-        layout.setPadding(false);
-        layout.setSpacing(false);
-        layout.getThemeList().set("spacing-s", true);
-        layout.setAlignItems(FlexComponent.Alignment.STRETCH);
+    private Component createDrawerContent(Tabs menu)
+    {
+        VerticalLayout drawer = new VerticalLayout();
+        drawer.setSizeFull();
+        drawer.setPadding(false);
+        drawer.setSpacing(false);
+        drawer.getThemeList().set("spacing-s", true);
+        drawer.setAlignItems(FlexComponent.Alignment.STRETCH);
         HorizontalLayout logoLayout = new HorizontalLayout();
         logoLayout.setId("logo");
         logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         logoLayout.add(new Image("images/logo.png", "AS2 Flow logo"));
         logoLayout.add(new H1("AS2 Flow"));
-        layout.add(logoLayout, menu);
-        return layout;
+        drawer.add(logoLayout, menu);
+        return drawer;
     }
 
-    private Tabs createMenu() {
+    private Tabs createMenu()
+    {
         final Tabs tabs = new Tabs();
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         tabs.addThemeVariants(TabsVariant.LUMO_MINIMAL);
@@ -89,7 +105,8 @@ public class MainView extends AppLayout {
         return tabs;
     }
 
-    private Component[] createMenuItems() {
+    private Component[] createMenuItems()
+    {
         return new Tab[]{
                 createTab("Senders", IdentitiesView.class),
                 createTab("Receivers", PartnersView.class),
@@ -97,26 +114,22 @@ public class MainView extends AppLayout {
         };
     }
 
-    private static Tab createTab(String text, Class<? extends Component> navigationTarget) {
-        final Tab tab = new Tab();
-        tab.add(new RouterLink(text, navigationTarget));
-        ComponentUtil.setData(tab, Class.class, navigationTarget);
-        return tab;
-    }
-
     @Override
-    protected void afterNavigation() {
+    protected void afterNavigation()
+    {
         super.afterNavigation();
         getTabForComponent(getContent()).ifPresent(menu::setSelectedTab);
         viewTitle.setText(getCurrentPageTitle());
     }
 
-    private Optional<Tab> getTabForComponent(Component component) {
+    private Optional<Tab> getTabForComponent(Component component)
+    {
         return menu.getChildren().filter(tab -> ComponentUtil.getData(tab, Class.class).equals(component.getClass()))
                 .findFirst().map(Tab.class::cast);
     }
 
-    private String getCurrentPageTitle() {
+    private String getCurrentPageTitle()
+    {
         PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
         return title == null ? "" : title.value();
     }
