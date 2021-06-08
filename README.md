@@ -7,6 +7,10 @@ The goal of this project is to integrate the AS2 protocol rules into a modern Va
 
 The project uses the AS2 core implementation of https://github.com/phax/as2-lib and builds on top of it with minor changes to the workflow.
 
+## The AS2 Protocol
+AS2 is a transport protocol specified in [RFC 4130](http://www.ietf.org/rfc/rfc4130.txt). AS2 version 1.1 adding compression is specified in [RFC 5402](http://www.ietf.org/rfc/rfc5402.txt). The MDN is specified in [RFC 3798](http://www.ietf.org/rfc/rfc3798.txt). Algorithm names are defined in [RFC 5751](https://www.ietf.org/rfc/rfc5751.txt) (S/MIME 3.2) which supersedes [RFC 3851](https://www.ietf.org/rfc/rfc3851.txt) (S/MIME 3.1);
+*(Links take some time to load, but they do load eventually)*
+
 ## Running and debugging the application
 
 ### Running the application from the command line.
