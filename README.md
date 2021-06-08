@@ -40,7 +40,8 @@ You can now also attach breakpoints in code for debugging purposes, by clicking 
 - `entity | repository | service` folders in `src/main/java/com/as2flow/backend/` contain the persistence layer logic for the application.
 - `security` folder in `src/main/java/com/as2flow/` contains the Spring security configuration for the app.
 - `as2` folder in `src/main/java/com/as2flow/backend/` contains the AS2 related backend logic for the protocol.  `src/main/java/com/as2flow/As2ServletConfig`  contains the AS2 servlet config.
-- 
+- package `src/test/java/com/as2flow` contains the tests for the application.
+- package `src/main/java/webapp` contains the files for the offline PWA page.
 
 ## What is left?
 - Asynchronous MDN is not implemented
