@@ -1,11 +1,11 @@
-# AS2 Flow
 
-This is an example project that can be used as a starting point to create your own Vaadin application with Spring Boot.
-It contains all the necessary configuration and some placeholder files to get you started.
+<h1 align="center">AS2 Flow</h1>
 
-The project is a standard Maven project, so you can import it to your IDE of choice. [Read more how to set up a development environment](https://vaadin.com/docs/v14/flow/installing/installing-overview.html) for Vaadin projects (Windows, Linux, macOS). 
+⚠️ *Project still in development. By no means you should be relying on the product for a real B2B file transfer solution (for now)!*
 
-This project was created from https://start.vaadin.com.
+The goal of this project is to integrate the AS2 protocol rules into a modern Vaadin Spring Boot based application. The end product should be a hardened and secure enterprise-level file transfer/management solution.
+
+The project uses the AS2 core implementation of https://github.com/phax/as2-lib and builds on top of it with minor changes to the workflow.
 
 ## Running and debugging the application
 
@@ -21,7 +21,7 @@ After the application has started, you can view it at http://localhost:8080/ in 
 You can now also attach breakpoints in code for debugging purposes, by clicking next to a line number in any source file.
 
 ### Running and debugging the application in Eclipse
-- Locate the Application.java class in the Package Explorer. It is in `src/main/java`, under the main package.
+- Locate the Application.java class in the Package Explorer. It is in `src/main/java/com/as2flow`.
 - Right-click on the file and select `Debug As` --> `Java Application`.
 
 Do not worry if the debugger breaks at a `SilentExitException`. This is a Spring Boot feature and happens on every startup.
@@ -30,14 +30,14 @@ After the application has started, you can view it at http://localhost:8080/ in 
 You can now also attach breakpoints in code for debugging purposes, by clicking next to a line number in any source file.
 ## Project structure
 
-- `MainView.java` in `src/main/java` contains the navigation setup. It uses [App Layout](https://vaadin.com/components/vaadin-app-layout).
-- `views` package in `src/main/java` contains the server-side Java views of your application.
+- `MainView.java` in `src/main/java/com/as2flow/views` contains the navigation setup. It uses [App Layout](https://vaadin.com/components/vaadin-app-layout).
+- `views` package in `src/main/java/com/as2flow` contains the server-side Java views of your application.
 - `views` folder in `frontend/` contains the client-side JavaScript views of your application.
+- `entity | repository | service` folders in `src/main/java/com/as2flow/backend/` contain the persistence layer logic for the application.
+- `security` folder in `src/main/java/com/as2flow/` contains the Spring security configuration for the app.
+- `as2` folder in `src/main/java/com/as2flow/backend/` contains the AS2 related backend logic for the protocol.  `src/main/java/com/as2flow/As2ServletConfig`  contains the AS2 servlet config.
+- 
 
-## What next?
-
-[vaadin.com](https://vaadin.com) has lots of material to help you get you started:
-
-- Follow the tutorials in [vaadin.com/tutorials](https://vaadin.com/tutorials). Especially [vaadin.com/tutorials/getting-started-with-flow](https://vaadin.com/tutorials/getting-started-with-flow) is good for getting a grasp of the basic Vaadin concepts.
-- Read the documentation in [vaadin.com/docs](https://vaadin.com/docs).
-- For a bigger Vaadin application example, check out the Full Stack App starter from [vaadin.com/start](https://vaadin.com/start).
+## What is left?
+- Asynchronous MDN is not implemented.
+- ...
