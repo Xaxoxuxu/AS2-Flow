@@ -1,8 +1,9 @@
 package com.as2flow.views;
 
-import com.as2flow.views.drawer.partnersips.IdentitiesView;
-import com.as2flow.views.drawer.partnersips.PartnersView;
-import com.as2flow.views.drawer.partnersips.PartnershipsView;
+import com.as2flow.views.drawer.MonitoringView;
+import com.as2flow.views.drawer.partnerships.IdentitiesView;
+import com.as2flow.views.drawer.partnerships.PartnersView;
+import com.as2flow.views.drawer.partnerships.PartnershipsView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -110,7 +111,8 @@ public class MainView extends AppLayout
         return new Tab[]{
                 createTab("Senders", IdentitiesView.class),
                 createTab("Receivers", PartnersView.class),
-                createTab("Partnerships", PartnershipsView.class)
+                createTab("Partnerships", PartnershipsView.class),
+                createTab("Monitoring", MonitoringView.class)
         };
     }
 

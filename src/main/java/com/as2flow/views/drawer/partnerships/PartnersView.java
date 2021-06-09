@@ -1,4 +1,4 @@
-package com.as2flow.views.drawer.partnersips;
+package com.as2flow.views.drawer.partnerships;
 
 import com.as2flow.backend.entity.Partnership;
 import com.as2flow.backend.service.PartnershipService;
@@ -11,18 +11,16 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
 
-@Route(value = "identities", layout = MainView.class)
-@RouteAlias(value = "", layout = MainView.class)
-@PageTitle("Identities")
-public class IdentitiesView extends VerticalLayout
+@Route(value = "partners", layout = MainView.class)
+@PageTitle("Partners")
+public class PartnersView extends VerticalLayout
 {
     private final PartnershipService partnershipService;
     private final Grid<Partnership> grid = new Grid<>(Partnership.class);
     private final TextField filterText = new TextField();
 
-    public IdentitiesView(PartnershipService partnershipService)
+    public PartnersView(PartnershipService partnershipService)
     {
         this.partnershipService = partnershipService;
         addClassName("list-view");
@@ -44,7 +42,7 @@ public class IdentitiesView extends VerticalLayout
 
     private void updateList()
     {
-        grid.setItems(partnershipService.findAll(CPartnershipIDs.PID_AS2, filterText.getValue(), PartnershipService.FindBy.SenderAttrs));
+        grid.setItems(partnershipService.findAll(CPartnershipIDs.PID_AS2, filterText.getValue(), PartnershipService.FindBy.ReceiverAttrs));
     }
 
     private void configureGrid()
@@ -52,19 +50,28 @@ public class IdentitiesView extends VerticalLayout
         grid.addClassName("entity-grid");
         grid.setSizeFull();
         grid.removeAllColumns();
-        grid.addColumn(sender -> {
-            IStringMap m = sender.getSenderAttrs();
+        grid.addColumn(receiver ->
+        {
+            IStringMap m = receiver.getReceiverAttrs();
             return m.getValue(CPartnershipIDs.PID_AS2);
         }).setHeader("AS2 ID");
-        grid.addColumn(sender -> {
-            IStringMap m = sender.getSenderAttrs();
+        grid.addColumn(receiver ->
+        {
+            IStringMap m = receiver.getReceiverAttrs();
             return m.getValue(CPartnershipIDs.PID_X509_ALIAS);
         }).setHeader("Key alias");
-        grid.addColumn(sender -> {
-            IStringMap m = sender.getSenderAttrs();
+        grid.addColumn(receiver ->
+        {
+            IStringMap m = receiver.getReceiverAttrs();
             String email = m.getValue(CPartnershipIDs.PID_EMAIL);
             return email == null ? "-" : email;
         }).setHeader("Email");
+        grid.addColumn(receiver ->
+        {
+            IStringMap m = receiver.getAttributes();
+            String url = m.getValue(CPartnershipIDs.PA_AS2_URL);
+            return url == null ? "-" : url;
+        }).setHeader("URL");
         grid.getColumns().forEach(c -> c.setAutoWidth(true));
     }
 }

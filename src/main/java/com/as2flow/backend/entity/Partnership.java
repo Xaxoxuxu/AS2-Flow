@@ -17,26 +17,26 @@ public class Partnership extends AbstractEntity implements Cloneable
 {
     @NotNull
     @NotEmpty
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Column(name = "value")
-    @MapKeyColumn(name = "attribute")
-    private final Map<String, String> senderAttrs;
-    @NotNull
-    @NotEmpty
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Column(name = "value")
-    @MapKeyColumn(name = "attribute")
-    private final Map<String, String> receiverAttrs;
-    @NotNull
-    @NotEmpty
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Column(name = "value")
-    @MapKeyColumn(name = "attribute")
-    private final Map<String, String> attributes;
-    @NotNull
-    @NotEmpty
     @Column(unique = true)
     private String name;
+    @NotNull
+    @NotEmpty
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(name = "value")
+    @MapKeyColumn(name = "attribute")
+    private Map<String, String> senderAttrs;
+    @NotNull
+    @NotEmpty
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(name = "value")
+    @MapKeyColumn(name = "attribute")
+    private Map<String, String> receiverAttrs;
+    @NotNull
+    @NotEmpty
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(name = "value")
+    @MapKeyColumn(name = "attribute")
+    private Map<String, String> attributes;
 
     public Partnership()
     {
@@ -72,6 +72,11 @@ public class Partnership extends AbstractEntity implements Cloneable
         return map;
     }
 
+    public void setSenderAttrs(IStringMap senderAttrs)
+    {
+        this.senderAttrs = senderAttrs;
+    }
+
     public IStringMap getReceiverAttrs()
     {
         IStringMap map = new StringMap();
@@ -80,12 +85,22 @@ public class Partnership extends AbstractEntity implements Cloneable
         return map;
     }
 
+    public void setReceiverAttrs(IStringMap receiverAttrs)
+    {
+        this.receiverAttrs = receiverAttrs;
+    }
+
     public IStringMap getAttributes()
     {
         IStringMap map = new StringMap();
         if (attributes != null)
             attributes.forEach(map::put);
         return map;
+    }
+
+    public void setAttributes(IStringMap attributes)
+    {
+        this.attributes = attributes;
     }
 
     private String getSenderAttribute(String attribute)

@@ -1,5 +1,6 @@
 package com.as2flow.backend.as2;
 
+import com.as2flow.backend.as2.utils.Utils;
 import com.as2flow.backend.entity.Partnership;
 import com.as2flow.backend.service.PartnershipService;
 import com.helger.as2lib.AbstractDynamicComponent;
@@ -31,30 +32,11 @@ public class H2PartnershipFactory extends AbstractDynamicComponent implements IP
         this.partnershipService = partnershipService;
     }
 
-    private static Partnership _toEntity(com.helger.as2lib.partner.Partnership partnership)
-    {
-        return new Partnership(
-                partnership.getName(),
-                partnership.getAllSenderIDs(),
-                partnership.getAllReceiverIDs(),
-                partnership.getAllAttributes());
-    }
-
-    private static com.helger.as2lib.partner.Partnership _toPartnership(Partnership partnership)
-    {
-        com.helger.as2lib.partner.Partnership p = new com.helger.as2lib.partner.Partnership(partnership.getName());
-        p.addSenderIDs(partnership.getSenderAttrs());
-        p.addReceiverIDs(partnership.getReceiverAttrs());
-        p.addAllAttributes(partnership.getAttributes());
-
-        return p;
-    }
-
     @Nonnull
     @Override
     public EChange addPartnership(@Nonnull com.helger.as2lib.partner.Partnership aPartnership) throws AS2Exception
     {
-        partnershipService.save(_toEntity(aPartnership));
+        partnershipService.save(Utils.convertPartnershipToEntity(aPartnership));
         return EChange.CHANGED;
     }
 
@@ -62,7 +44,7 @@ public class H2PartnershipFactory extends AbstractDynamicComponent implements IP
     @Override
     public EChange removePartnership(@Nonnull com.helger.as2lib.partner.Partnership aPartnership) throws AS2Exception
     {
-        partnershipService.delete(_toEntity(aPartnership));
+        partnershipService.delete(Utils.convertPartnershipToEntity(aPartnership));
 
         return partnershipService.findAll(aPartnership.getName()).size() == 0 ? EChange.CHANGED : EChange.UNCHANGED;
     }
@@ -95,7 +77,7 @@ public class H2PartnershipFactory extends AbstractDynamicComponent implements IP
         if (matchingPartnerShips.size() == 0)
             return null;
 
-        return _toPartnership(matchingPartnerShips.get(0));
+        return Utils.convertEntityToPartnership(matchingPartnerShips.get(0));
     }
 
     @Nonnull
@@ -112,7 +94,7 @@ public class H2PartnershipFactory extends AbstractDynamicComponent implements IP
         return partnershipService
                 .findAll("")
                 .stream()
-                .map(H2PartnershipFactory::_toPartnership)
+                .map(Utils::convertEntityToPartnership)
                 .collect(Collectors.toCollection(CommonsArrayList::new));
     }
 
@@ -147,7 +129,7 @@ public class H2PartnershipFactory extends AbstractDynamicComponent implements IP
         {
             List<Partnership> resultsList = partnershipService.findAll(entry.getKey(), entry.getValue(), PartnershipService.FindBy.SenderAttrs);
             if (resultsList.size() == 0) continue;
-            return _toPartnership(resultsList.get(0));
+            return Utils.convertEntityToPartnership(resultsList.get(0));
         }
 
         return null;

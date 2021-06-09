@@ -16,6 +16,7 @@
  */
 package com.as2flow.backend.as2;
 
+import com.as2flow.backend.service.AS2MessageService;
 import com.as2flow.backend.service.PartnershipService;
 import com.helger.as2lib.cert.CertificateFactory;
 import com.helger.as2lib.crypto.ECryptoAlgorithmCrypt;
@@ -30,7 +31,6 @@ import com.helger.as2lib.processor.sender.AsynchMDNSenderModule;
 import com.helger.as2lib.processor.storage.MessageFileModule;
 import com.helger.as2lib.session.AS2Session;
 import com.helger.as2servlet.AbstractAS2ReceiveXServletHandler;
-import com.helger.as2servlet.util.AS2ServletMDNReceiverModule;
 import com.helger.as2servlet.util.AS2ServletReceiverModule;
 import com.helger.commons.collection.impl.ICommonsMap;
 import com.helger.security.keystore.EKeyStoreType;
@@ -45,10 +45,12 @@ import static com.helger.as2lib.processor.resender.DirectoryResenderModule.ATTR_
 public class AS2ReceiveXServletHandlerCodeConfig extends AbstractAS2ReceiveXServletHandler
 {
     final PartnershipService partnershipService;
+    final AS2MessageService as2MessageService;
 
-    public AS2ReceiveXServletHandlerCodeConfig(PartnershipService partnershipService)
+    public AS2ReceiveXServletHandlerCodeConfig(PartnershipService partnershipService, AS2MessageService as2MessageService)
     {
         this.partnershipService = partnershipService;
+        this.as2MessageService = as2MessageService;
     }
 
     @Override
@@ -121,7 +123,7 @@ public class AS2ReceiveXServletHandlerCodeConfig extends AbstractAS2ReceiveXServ
 
             /** A module storing the message. */
             {
-                final MyHandlerModule aModule = new MyHandlerModule ();
+                final MyHandlerModule aModule = new MyHandlerModule (partnershipService, as2MessageService);
                 aModule.initDynamicComponent (aSession, null);
                 aMessageProcessor.addModule (aModule);
             }
@@ -175,12 +177,12 @@ public class AS2ReceiveXServletHandlerCodeConfig extends AbstractAS2ReceiveXServ
                 aMessageProcessor.addModule (aModule);
             }
 
-            /** Only needed to receive asynchronous MDNs */
+            /** Only needed to receive asynchronous MDNs *//*
             {
                 final AS2ServletMDNReceiverModule aModule = new AS2ServletMDNReceiverModule ();
                 aModule.initDynamicComponent (aSession, null);
                 aMessageProcessor.addModule (aModule);
-            }
+            }*/
 
             {
                 final AS2SenderModule aModule = new AS2SenderModule();

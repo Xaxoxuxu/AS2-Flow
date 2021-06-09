@@ -1,4 +1,4 @@
-package com.as2flow.views.drawer.partnersips;
+package com.as2flow.views.drawer.partnerships;
 
 import com.as2flow.backend.entity.Partnership;
 import com.as2flow.backend.service.PartnershipService;
@@ -48,7 +48,8 @@ public class PartnershipsView extends VerticalLayout
         closeEditor();
     }
 
-    private HorizontalLayout getToolbar() {
+    private HorizontalLayout getToolbar()
+    {
         filterText.setPlaceholder("Filter by name...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
@@ -62,18 +63,21 @@ public class PartnershipsView extends VerticalLayout
         return toolbar;
     }
 
-    void addPartnership() {
+    void addPartnership()
+    {
         grid.asSingleSelect().clear();
         editPartnership(new Partnership());
     }
 
-    private void savePartnership(PartnershipForm.SaveEvent event) {
+    private void savePartnership(PartnershipForm.SaveEvent event)
+    {
         partnershipService.save(event.getPartnership());
         updateList();
         closeEditor();
     }
 
-    private void deletePartnership(PartnershipForm.DeleteEvent event) {
+    private void deletePartnership(PartnershipForm.DeleteEvent event)
+    {
         partnershipService.delete(event.getPartnership());
         updateList();
         closeEditor();
@@ -98,7 +102,8 @@ public class PartnershipsView extends VerticalLayout
         grid.setSizeFull();
         grid.removeAllColumns();
         grid.addColumn(Partnership::getName).setHeader("Name");
-        grid.addColumn(partnership -> {
+        grid.addColumn(partnership ->
+        {
             IStringMap m = partnership.getAttributes();
             return m.getValue(CPartnershipIDs.PA_SUBJECT);
         }).setHeader("Subject");
@@ -107,17 +112,21 @@ public class PartnershipsView extends VerticalLayout
                 editPartnership(event.getValue()));
     }
 
-    public void editPartnership(Partnership partnership) {
-        if (partnership == null) {
+    public void editPartnership(Partnership partnership)
+    {
+        if (partnership == null)
+        {
             closeEditor();
-        } else {
+        } else
+        {
             partnershipForm.setPartnership(partnership);
             partnershipForm.setVisible(true);
             addClassName("editing");
         }
     }
 
-    private void closeEditor() {
+    private void closeEditor()
+    {
         partnershipForm.setPartnership(null);
         partnershipForm.setVisible(false);
         removeClassName("editing");
