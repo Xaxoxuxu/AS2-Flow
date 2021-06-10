@@ -11,6 +11,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
@@ -39,9 +40,19 @@ public class PartnershipForm extends FormLayout
 
     public PartnershipForm()
     {
-        addClassName("partnership-form");
+        addClassName("form");
 
-        binder.bind(name, Partnership::getName, Partnership::setName);
+        name.setPlaceholder("Name");
+        senderAs2Id.setPlaceholder("Sender");
+        receiverAs2Id.setPlaceholder("Receiver");
+        as2Url.setPlaceholder("URL");
+        subject.setPlaceholder("Subject");
+        senderX509Alias.setPlaceholder("Cert Alias");
+        receiverX509Alias.setPlaceholder("Cert Alias");
+        senderEmail.setPlaceholder("Email");
+        receiverEmail.setPlaceholder("Email");
+
+        binder.bind(name, Partnership::getName, null);
         binder.bind(senderAs2Id, Partnership::getSenderAs2Id, Partnership::setSenderAs2Id);
         binder.bind(receiverAs2Id, Partnership::getReceiverAs2Id, Partnership::setReceiverAs2Id);
         binder.bind(as2Url, Partnership::getAs2Url, Partnership::setAs2Url);
@@ -56,18 +67,13 @@ public class PartnershipForm extends FormLayout
         cryptoAlgorithm.setItems(ECryptoAlgorithmCrypt.values());
         signingAlgorithm.setItems(ECryptoAlgorithmSign.values());
 
-        add(name,
-                senderAs2Id,
-                receiverAs2Id,
-                as2Url,
-                subject,
-                cryptoAlgorithm,
-                signingAlgorithm,
-                senderX509Alias,
-                receiverX509Alias,
-                senderEmail,
-                receiverEmail,
-                createButtonsLayout());
+        VerticalLayout verticalLayout = new VerticalLayout();
+        verticalLayout.add(new HorizontalLayout(name, senderAs2Id, receiverAs2Id, as2Url, subject));
+        verticalLayout.add(new HorizontalLayout(cryptoAlgorithm, signingAlgorithm, senderX509Alias, receiverX509Alias));
+        verticalLayout.add(new HorizontalLayout(senderEmail, receiverEmail));
+        verticalLayout.add(createButtonsLayout());
+
+        add(verticalLayout);
     }
 
     private HorizontalLayout createButtonsLayout()

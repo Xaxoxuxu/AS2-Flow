@@ -53,12 +53,12 @@ public class H2PartnershipFactory extends AbstractDynamicComponent implements IP
     @Override
     public com.helger.as2lib.partner.Partnership getPartnership(@Nonnull com.helger.as2lib.partner.Partnership aPartnership) throws AS2Exception
     {
-        com.helger.as2lib.partner.Partnership realPartnership = getPartnershipByName (aPartnership.getName ());
+        com.helger.as2lib.partner.Partnership realPartnership = getPartnershipByName(aPartnership.getName());
 
         if (realPartnership == null)
         {
             // Found no partnership by name
-            realPartnership = getPartnershipByID (aPartnership.getAllSenderIDs (), aPartnership.getAllReceiverIDs ());
+            realPartnership = getPartnershipByID(aPartnership.getAllSenderIDs(), aPartnership.getAllReceiverIDs());
         }
 
         if (realPartnership == null)
@@ -102,17 +102,17 @@ public class H2PartnershipFactory extends AbstractDynamicComponent implements IP
     public void updatePartnership(@Nonnull IMessage aMsg, boolean bOverwrite) throws AS2Exception
     {
         // Fill in any available partnership information
-        final com.helger.as2lib.partner.Partnership partnership = getPartnership (aMsg.partnership ());
+        final com.helger.as2lib.partner.Partnership partnership = getPartnership(aMsg.partnership());
 
-        aMsg.partnership ().copyFrom (partnership);
+        aMsg.partnership().copyFrom(partnership);
 
         // Set attributes
         if (bOverwrite)
         {
-            final String sSubject = partnership.getAttribute (CPartnershipIDs.PA_SUBJECT);
+            final String sSubject = partnership.getAttribute(CPartnershipIDs.PA_SUBJECT);
             if (sSubject != null)
             {
-                aMsg.setSubject (new MessageParameters(aMsg).format (sSubject));
+                aMsg.setSubject(new MessageParameters(aMsg).format(sSubject));
             }
         }
     }
@@ -123,9 +123,9 @@ public class H2PartnershipFactory extends AbstractDynamicComponent implements IP
 
     }
 
-    private com.helger.as2lib.partner.Partnership getPartnershipByID (final IStringMap allSenderIDs, final IStringMap allReceiverIDs)
+    private com.helger.as2lib.partner.Partnership getPartnershipByID(final IStringMap allSenderIDs, final IStringMap allReceiverIDs)
     {
-        for (final Map.Entry <String, String> entry : allSenderIDs.entrySet ())
+        for (final Map.Entry<String, String> entry : allSenderIDs.entrySet())
         {
             List<Partnership> resultsList = partnershipService.findAll(entry.getKey(), entry.getValue(), PartnershipService.FindBy.SenderAttrs);
             if (resultsList.size() == 0) continue;

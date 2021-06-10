@@ -5,6 +5,7 @@ import com.helger.as2lib.crypto.ECryptoAlgorithmSign;
 import com.helger.as2lib.partner.CPartnershipIDs;
 import com.helger.commons.collection.attr.IStringMap;
 import com.helger.commons.collection.attr.StringMap;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -15,6 +16,8 @@ import java.util.Map;
 @Entity
 public class Partnership extends AbstractEntity implements Cloneable
 {
+    private static final String AUTO_GENERATED = "auto-generated";
+
     @NotNull
     @NotEmpty
     @Column(unique = true)
@@ -46,22 +49,32 @@ public class Partnership extends AbstractEntity implements Cloneable
         attributes = new HashMap<>();
     }
 
-    public Partnership(String name, IStringMap senderAttrs, IStringMap receiverAttrs, IStringMap attributes)
+    public Partnership(IStringMap senderAttrs, IStringMap receiverAttrs, IStringMap attributes)
     {
-        this.name = name;
         this.senderAttrs = senderAttrs;
         this.receiverAttrs = receiverAttrs;
         this.attributes = attributes;
+        setName();
     }
 
+    // Name will be auto generated from as2 ids
     public String getName()
     {
+        if (StringUtils.isEmpty(name) || name.equals(AUTO_GENERATED))
+            setName();
+
         return name;
     }
 
-    public void setName(String name)
+    private void setName()
     {
-        this.name = name;
+        if (StringUtils.isEmpty(getSenderAs2Id()) || StringUtils.isEmpty(getReceiverAs2Id()))
+        {
+            this.name = AUTO_GENERATED;
+        } else
+        {
+            this.name = getSenderAs2Id() + "-" + getReceiverAs2Id();
+        }
     }
 
     public IStringMap getSenderAttrs()

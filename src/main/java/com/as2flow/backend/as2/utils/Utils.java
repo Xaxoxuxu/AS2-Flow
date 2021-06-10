@@ -10,14 +10,7 @@ public class Utils
 
     public static Partnership convertPartnershipToEntity(com.helger.as2lib.partner.Partnership partnership)
     {
-        Partnership result = new Partnership();
-
-        result.setName(partnership.getName());
-        result.setAttributes(partnership.getAllAttributes());
-        result.setReceiverAttrs(partnership.getAllReceiverIDs());
-        result.setSenderAttrs(partnership.getAllSenderIDs());
-
-        return result;
+        return new Partnership(partnership.getAllSenderIDs(), partnership.getAllReceiverIDs(), partnership.getAllAttributes());
     }
 
     public static com.helger.as2lib.partner.Partnership convertEntityToPartnership(Partnership partnership)

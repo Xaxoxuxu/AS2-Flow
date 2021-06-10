@@ -4,12 +4,15 @@ import com.as2flow.backend.entity.Partnership;
 import com.as2flow.backend.service.PartnershipService;
 import com.as2flow.views.MainView;
 import com.as2flow.views.PartnershipForm;
+import com.helger.as2lib.crypto.ECryptoAlgorithmCrypt;
+import com.helger.as2lib.crypto.ECryptoAlgorithmSign;
 import com.helger.as2lib.partner.CPartnershipIDs;
 import com.helger.commons.collection.attr.IStringMap;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -26,6 +29,7 @@ public class PartnershipsView extends VerticalLayout
     private final Grid<Partnership> grid = new Grid<>(Partnership.class);
     private final TextField filterText = new TextField();
     private final PartnershipForm partnershipForm;
+    private final Dialog partnershipDialog;
 
     public PartnershipsView(PartnershipService partnershipService)
     {
@@ -39,11 +43,14 @@ public class PartnershipsView extends VerticalLayout
         partnershipForm.addListener(PartnershipForm.SaveEvent.class, this::savePartnership);
         partnershipForm.addListener(PartnershipForm.DeleteEvent.class, this::deletePartnership);
         partnershipForm.addListener(PartnershipForm.CloseEvent.class, e -> closeEditor());
-        Div content = new Div(grid, partnershipForm);
-        content.addClassName("content");
-        content.setSizeFull();
 
-        add(getToolbar(), content);
+        partnershipDialog = new Dialog();
+        partnershipDialog.setCloseOnEsc(false);
+        partnershipDialog.setCloseOnOutsideClick(false);
+        partnershipDialog.setMaxWidth(90, Unit.PERCENTAGE);
+        partnershipDialog.add(partnershipForm);
+
+        add(getToolbar(), grid);
         updateList();
         closeEditor();
     }
@@ -63,10 +70,15 @@ public class PartnershipsView extends VerticalLayout
         return toolbar;
     }
 
-    void addPartnership()
+    private void addPartnership()
     {
         grid.asSingleSelect().clear();
-        editPartnership(new Partnership());
+
+        Partnership p = new Partnership();
+        p.setEncryptAlgorithm(ECryptoAlgorithmCrypt.CRYPT_3DES);
+        p.setSigningAlgorithm(ECryptoAlgorithmSign.DIGEST_MD5);
+
+        editPartnership(p);
     }
 
     private void savePartnership(PartnershipForm.SaveEvent event)
@@ -81,14 +93,6 @@ public class PartnershipsView extends VerticalLayout
         partnershipService.delete(event.getPartnership());
         updateList();
         closeEditor();
-    }
-
-    private void configureFilter()
-    {
-        filterText.setPlaceholder("Filter...");
-        filterText.setClearButtonVisible(true);
-        filterText.setValueChangeMode(ValueChangeMode.LAZY);
-        filterText.addValueChangeListener(e -> updateList());
     }
 
     private void updateList()
@@ -117,18 +121,18 @@ public class PartnershipsView extends VerticalLayout
         if (partnership == null)
         {
             closeEditor();
-        } else
+        }
+        else
         {
             partnershipForm.setPartnership(partnership);
-            partnershipForm.setVisible(true);
-            addClassName("editing");
+            partnershipDialog.open();
         }
     }
 
     private void closeEditor()
     {
         partnershipForm.setPartnership(null);
-        partnershipForm.setVisible(false);
-        removeClassName("editing");
+        partnershipDialog.close();
+        grid.deselectAll();
     }
 }

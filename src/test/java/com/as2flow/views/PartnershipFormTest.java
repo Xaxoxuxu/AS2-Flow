@@ -18,7 +18,7 @@ public class PartnershipFormTest
     public void setupData()
     {
         partnership1 = new Partnership();
-        partnership1.setName("OpenAS2A-OpenAS2B");
+        //partnership1.setName("OpenAS2A-OpenAS2B");
         partnership1.setSenderAs2Id("OpenAS2A");
         partnership1.setReceiverAs2Id("OpenAS2B");
         partnership1.setProtocol("as2");
@@ -34,7 +34,7 @@ public class PartnershipFormTest
         //partnership1.setReceiverEmail("receiver@receiver.com");
 
         partnership2 = new Partnership();
-        partnership2.setName("OpenAS2B-OpenAS2A");
+        //partnership2.setName("OpenAS2B-OpenAS2A");
         partnership2.setSenderAs2Id("OpenAS2B");
         partnership2.setReceiverAs2Id("OpenAS2A");
         partnership2.setProtocol("as2");

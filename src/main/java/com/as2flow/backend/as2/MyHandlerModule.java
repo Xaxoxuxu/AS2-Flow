@@ -36,7 +36,7 @@ public class MyHandlerModule extends AbstractProcessorModule implements IProcess
         // TODO: do this BEFORE DO_STORE
         //if (!aMsg.partnership().getSubject().equals(aMsg.getSubject()))
         //{
-       //     throw new AS2Exception("No partnership with subject: '" + aMsg.getSubject() + "' found!");
+        //     throw new AS2Exception("No partnership with subject: '" + aMsg.getSubject() + "' found!");
         //}
 
         // TODO e.g. save to DB
