@@ -1,7 +1,7 @@
 package com.as2flow.views.drawer;
 
-import com.as2flow.backend.entity.AS2MessageEntity;
-import com.as2flow.backend.entity.PartnershipEntity;
+import com.as2flow.backend.entity.AS2Message;
+import com.as2flow.backend.entity.Partnership;
 import com.as2flow.backend.service.AS2MessageService;
 import com.as2flow.views.MainView;
 import com.vaadin.flow.component.grid.Grid;
@@ -16,7 +16,7 @@ import com.vaadin.flow.router.Route;
 public class MonitoringView extends VerticalLayout
 {
     private final AS2MessageService as2MessageService;
-    private final Grid<AS2MessageEntity> grid = new Grid<>(AS2MessageEntity.class);
+    private final Grid<AS2Message> grid = new Grid<>(AS2Message.class);
     private final TextField filterText = new TextField();
 
     public MonitoringView(AS2MessageService as2MessageService)
@@ -51,9 +51,9 @@ public class MonitoringView extends VerticalLayout
         grid.removeAllColumns();
         grid.addColumn(message ->
         {
-            PartnershipEntity p = message.getPartnership();
+            Partnership p = message.getPartnership();
             return p.getName();
         }).setHeader("Partnership Name");
-        grid.addColumn(AS2MessageEntity::getTimeProcessed).setHeader("Time Processed");
+        grid.addColumn(AS2Message::getTimeProcessed).setHeader("Time Processed");
     }
 }

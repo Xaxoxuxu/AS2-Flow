@@ -46,5 +46,5 @@ You can now also attach breakpoints in code for debugging purposes, by clicking 
 ## What is left?
 - Asynchronous MDN is not implemented
 - Monitoring
-- Flexible partnershipEntity configurations
+- Flexible partnership configurations
 - ...

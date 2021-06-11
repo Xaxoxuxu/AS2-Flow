@@ -8,24 +8,24 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 
 @Entity
-public class AS2MessageEntity extends AbstractEntity implements Cloneable
+public class AS2Message extends AbstractEntity implements Cloneable
 {
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    private final PartnershipEntity partnershipEntity;
+    private final Partnership partnership;
 
     @NotNull
     private final LocalTime timeProcessed;
 
-    public AS2MessageEntity(PartnershipEntity partnershipEntity)
+    public AS2Message(Partnership partnership)
     {
-        this.partnershipEntity = partnershipEntity;
+        this.partnership = partnership;
         this.timeProcessed = LocalTime.now();
     }
 
-    public PartnershipEntity getPartnership()
+    public Partnership getPartnership()
     {
-        return partnershipEntity;
+        return partnership;
     }
 
     public LocalTime getTimeProcessed()
