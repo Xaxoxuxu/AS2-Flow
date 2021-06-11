@@ -140,14 +140,26 @@ public class AS2ReceiveXServletHandlerCodeConfig extends AbstractAS2ReceiveXServ
             }
 
             {
-                // TODO: polling dirs to db
+                final AS2DirectoryPollingModule aModule = new AS2DirectoryPollingModule();
+                aModule.attrs().putIn(ATTR_OUTBOX_DIRECTORY, "data/toAny");
+                aModule.attrs().putIn(ATTR_ERROR_DIRECTORY, "data/toAny/error");
+                aModule.attrs().putIn(ATTR_DELIMITERS, "-.");
+                aModule.attrs().putIn(ATTR_FORMAT, "sender.as2_id,receiver.as2_id");
+                aModule.attrs().putIn(ATTR_MIMETYPE, "application/EDI-X12");
+                aModule.attrs().putIn(ATTR_SENDFILENAME, "true");
+                aModule.setInterval(2);
+                aModule.initDynamicComponent(aSession, null);
+                aMessageProcessor.addModule(aModule);
+            }
+
+            {
                 final AS2DirectoryPollingModule aModule = new AS2DirectoryPollingModule();
                 aModule.attrs().putIn(ATTR_OUTBOX_DIRECTORY, "data/toOpenAS2A");
                 aModule.attrs().putIn(ATTR_ERROR_DIRECTORY, "data/toOpenAS2A/error");
                 aModule.attrs().putIn(ATTR_DEFAULTS, "sender.as2_id=OpenAS2B, receiver.as2_id=OpenAS2A");
                 aModule.attrs().putIn(ATTR_MIMETYPE, "application/EDI-X12");
                 aModule.attrs().putIn(ATTR_SENDFILENAME, "true");
-                aModule.setInterval(1);
+                aModule.setInterval(2);
                 aModule.initDynamicComponent(aSession, null);
                 aMessageProcessor.addModule(aModule);
             }
@@ -176,13 +188,6 @@ public class AS2ReceiveXServletHandlerCodeConfig extends AbstractAS2ReceiveXServ
                 aModule.initDynamicComponent(aSession, null);
                 aMessageProcessor.addModule(aModule);
             }
-
-            /** Only needed to receive asynchronous MDNs *//*
-            {
-                final AS2ServletMDNReceiverModule aModule = new AS2ServletMDNReceiverModule ();
-                aModule.initDynamicComponent (aSession, null);
-                aMessageProcessor.addModule (aModule);
-            }*/
 
             {
                 final AS2SenderModule aModule = new AS2SenderModule();
