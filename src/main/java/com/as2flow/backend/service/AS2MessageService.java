@@ -1,6 +1,6 @@
 package com.as2flow.backend.service;
 
-import com.as2flow.backend.entity.AS2Message;
+import com.as2flow.backend.entity.AS2MessageEntity;
 import com.as2flow.backend.repository.AS2MessageRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ public class AS2MessageService
         this.as2MessageRepository = as2MessageRepository;
     }
 
-    public List<AS2Message> findAll(String stringFilter)
+    public List<AS2MessageEntity> findAll(String stringFilter)
     {
         if (stringFilter == null || stringFilter.isEmpty())
         {
@@ -30,25 +30,26 @@ public class AS2MessageService
 
         return as2MessageRepository.searchByName(stringFilter);
     }
+
     public long count()
     {
         return as2MessageRepository.count();
     }
 
-    public void delete(AS2Message as2Message)
+    public void delete(AS2MessageEntity as2MessageEntity)
     {
-        as2MessageRepository.delete(as2Message);
+        as2MessageRepository.delete(as2MessageEntity);
     }
 
-    public void save(AS2Message as2Message)
+    public void save(AS2MessageEntity as2MessageEntity)
     {
-        if (as2Message == null)
+        if (as2MessageEntity == null)
         {
             LOGGER.log(Level.SEVERE,
                     "AS2Message is null. Are you sure you have connected your form to the application?");
             return;
         }
-        as2MessageRepository.save(as2Message);
+        as2MessageRepository.save(as2MessageEntity);
     }
 
     @PostConstruct

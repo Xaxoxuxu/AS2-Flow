@@ -13,12 +13,16 @@ import javax.servlet.ServletContextEvent;
  * The entry point of the Spring Boot application.
  */
 @SpringBootApplication(exclude = ErrorMvcAutoConfiguration.class)
-public class Application extends SpringBootServletInitializer {
+public class Application extends SpringBootServletInitializer
+{
 
-    public static void main(String[] args) { LaunchUtil.launchBrowserInDevelopmentMode(SpringApplication.run(Application.class, args)); }
-
-    public void contextDestroyed (final ServletContextEvent sce)
+    public static void main(String[] args)
     {
-        AS2WebAppListener.staticDestroy ();
+        LaunchUtil.launchBrowserInDevelopmentMode(SpringApplication.run(Application.class, args));
+    }
+
+    public void contextDestroyed(final ServletContextEvent sce)
+    {
+        AS2WebAppListener.staticDestroy();
     }
 }

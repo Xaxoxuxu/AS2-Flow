@@ -2,13 +2,13 @@
  * Copyright (C) 2018-2021 Philip Helger (www.helger.com)
  * philip[at]helger[dot]com
  * Idea by: Sergey Yaskov
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,37 +40,37 @@ public class As2ServletConfig
     @Autowired
     private ServletContext m_aSC;
 
-    private void _initScope ()
+    private void _initScope()
     {
         // Required to be called before the servlet is initialized
-        if (!WebScopeManager.isGlobalScopePresent ())
+        if (!WebScopeManager.isGlobalScopePresent())
         {
-            AS2WebAppListener.staticInit (m_aSC);
+            AS2WebAppListener.staticInit(m_aSC);
         }
     }
 
     @Bean
-    public ServletRegistrationBean <AS2ReceiveServletCodeConfig> servletRegistrationBeanAS2 (final PartnershipService partnershipService, final AS2MessageService as2MessageService)
+    public ServletRegistrationBean<AS2ReceiveServletCodeConfig> servletRegistrationBeanAS2(final PartnershipService partnershipService, final AS2MessageService as2MessageService)
     {
-        _initScope ();
+        _initScope();
 
-        final ServletRegistrationBean <AS2ReceiveServletCodeConfig> bean = new ServletRegistrationBean <> (new AS2ReceiveServletCodeConfig(partnershipService, as2MessageService), "/as2");
-        final Map <String, String> aInitParams = new HashMap <> ();
+        final ServletRegistrationBean<AS2ReceiveServletCodeConfig> bean = new ServletRegistrationBean<>(new AS2ReceiveServletCodeConfig(partnershipService, as2MessageService), "/as2");
+        final Map<String, String> aInitParams = new HashMap<>();
         //aInitParams.put (AbstractAS2ReceiveXServletHandler.SERVLET_INIT_PARAM_AS2_SERVLET_CONFIG_FILENAME, "config/config.xml");
-        bean.setInitParameters (aInitParams);
+        bean.setInitParameters(aInitParams);
         bean.setLoadOnStartup(1);
         return bean;
     }
 
     //@Bean
-    public ServletRegistrationBean <AS2MDNReceiveServlet> servletRegistrationBeanMDN ()
+    public ServletRegistrationBean<AS2MDNReceiveServlet> servletRegistrationBeanMDN()
     {
-        _initScope ();
+        _initScope();
 
-        final ServletRegistrationBean <AS2MDNReceiveServlet> bean = new ServletRegistrationBean <> (new AS2MDNReceiveServlet (), "/as2mdn");
-        final Map <String, String> aInitParams = new HashMap <> ();
-        aInitParams.put (AbstractAS2ReceiveXServletHandler.SERVLET_INIT_PARAM_AS2_SERVLET_CONFIG_FILENAME, "config/config.xml");
-        bean.setInitParameters (aInitParams);
+        final ServletRegistrationBean<AS2MDNReceiveServlet> bean = new ServletRegistrationBean<>(new AS2MDNReceiveServlet(), "/as2mdn");
+        final Map<String, String> aInitParams = new HashMap<>();
+        aInitParams.put(AbstractAS2ReceiveXServletHandler.SERVLET_INIT_PARAM_AS2_SERVLET_CONFIG_FILENAME, "config/config.xml");
+        bean.setInitParameters(aInitParams);
         bean.setLoadOnStartup(1);
         return bean;
     }

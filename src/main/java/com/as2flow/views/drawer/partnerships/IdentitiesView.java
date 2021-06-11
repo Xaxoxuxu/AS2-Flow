@@ -1,6 +1,6 @@
 package com.as2flow.views.drawer.partnerships;
 
-import com.as2flow.backend.entity.Partnership;
+import com.as2flow.backend.entity.PartnershipEntity;
 import com.as2flow.backend.service.PartnershipService;
 import com.as2flow.views.MainView;
 import com.helger.as2lib.partner.CPartnershipIDs;
@@ -19,7 +19,7 @@ import com.vaadin.flow.router.RouteAlias;
 public class IdentitiesView extends VerticalLayout
 {
     private final PartnershipService partnershipService;
-    private final Grid<Partnership> grid = new Grid<>(Partnership.class);
+    private final Grid<PartnershipEntity> grid = new Grid<>(PartnershipEntity.class);
     private final TextField filterText = new TextField();
 
     public IdentitiesView(PartnershipService partnershipService)

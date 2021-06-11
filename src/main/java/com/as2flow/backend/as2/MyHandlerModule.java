@@ -1,7 +1,7 @@
 package com.as2flow.backend.as2;
 
-import com.as2flow.backend.entity.AS2Message;
-import com.as2flow.backend.entity.Partnership;
+import com.as2flow.backend.entity.AS2MessageEntity;
+import com.as2flow.backend.entity.PartnershipEntity;
 import com.as2flow.backend.service.AS2MessageService;
 import com.as2flow.backend.service.PartnershipService;
 import com.helger.as2lib.exception.AS2Exception;
@@ -42,8 +42,8 @@ public class MyHandlerModule extends AbstractProcessorModule implements IProcess
         // TODO e.g. save to DB
         LOGGER.info("Received AS2 message");
 
-        Partnership matchingPartnershipFromDb = partnershipService.findAll(aMsg.partnership().getName()).get(0);
-        AS2Message messageStoreEntity = new AS2Message(matchingPartnershipFromDb);
+        PartnershipEntity matchingPartnershipEntityFromDb = partnershipService.findAll(aMsg.partnership().getName()).get(0);
+        AS2MessageEntity messageStoreEntity = new AS2MessageEntity(matchingPartnershipEntityFromDb);
         as2MessageService.save(messageStoreEntity);
         LOGGER.info("Stored AS2 message to DB");
     }

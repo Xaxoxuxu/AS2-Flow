@@ -1,6 +1,6 @@
 package com.as2flow.views.drawer.partnerships;
 
-import com.as2flow.backend.entity.Partnership;
+import com.as2flow.backend.entity.PartnershipEntity;
 import com.as2flow.backend.service.PartnershipService;
 import com.as2flow.views.MainView;
 import com.as2flow.views.PartnershipForm;
@@ -26,7 +26,7 @@ import com.vaadin.flow.router.Route;
 public class PartnershipsView extends VerticalLayout
 {
     private final PartnershipService partnershipService;
-    private final Grid<Partnership> grid = new Grid<>(Partnership.class);
+    private final Grid<PartnershipEntity> grid = new Grid<>(PartnershipEntity.class);
     private final TextField filterText = new TextField();
     private final PartnershipForm partnershipForm;
     private final Dialog partnershipDialog;
@@ -74,7 +74,7 @@ public class PartnershipsView extends VerticalLayout
     {
         grid.asSingleSelect().clear();
 
-        Partnership p = new Partnership();
+        PartnershipEntity p = new PartnershipEntity();
         p.setEncryptAlgorithm(ECryptoAlgorithmCrypt.CRYPT_3DES);
         p.setSigningAlgorithm(ECryptoAlgorithmSign.DIGEST_MD5);
 
@@ -105,7 +105,7 @@ public class PartnershipsView extends VerticalLayout
         grid.addClassName("entity-grid");
         grid.setSizeFull();
         grid.removeAllColumns();
-        grid.addColumn(Partnership::getName).setHeader("Name");
+        grid.addColumn(PartnershipEntity::getName).setHeader("Name");
         grid.addColumn(partnership ->
         {
             IStringMap m = partnership.getAttributes();
@@ -116,15 +116,14 @@ public class PartnershipsView extends VerticalLayout
                 editPartnership(event.getValue()));
     }
 
-    public void editPartnership(Partnership partnership)
+    public void editPartnership(PartnershipEntity partnershipEntity)
     {
-        if (partnership == null)
+        if (partnershipEntity == null)
         {
             closeEditor();
-        }
-        else
+        } else
         {
-            partnershipForm.setPartnership(partnership);
+            partnershipForm.setPartnership(partnershipEntity);
             partnershipDialog.open();
         }
     }

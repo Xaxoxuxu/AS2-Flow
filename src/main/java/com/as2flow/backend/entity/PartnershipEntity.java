@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-public class Partnership extends AbstractEntity implements Cloneable
+public class PartnershipEntity extends AbstractEntity implements Cloneable
 {
     private static final String AUTO_GENERATED = "auto-generated";
 
@@ -41,7 +41,7 @@ public class Partnership extends AbstractEntity implements Cloneable
     @MapKeyColumn(name = "attribute")
     private Map<String, String> attributes;
 
-    public Partnership()
+    public PartnershipEntity()
     {
         name = "";
         senderAttrs = new HashMap<>();
@@ -49,7 +49,7 @@ public class Partnership extends AbstractEntity implements Cloneable
         attributes = new HashMap<>();
     }
 
-    public Partnership(IStringMap senderAttrs, IStringMap receiverAttrs, IStringMap attributes)
+    public PartnershipEntity(IStringMap senderAttrs, IStringMap receiverAttrs, IStringMap attributes)
     {
         this.senderAttrs = senderAttrs;
         this.receiverAttrs = receiverAttrs;

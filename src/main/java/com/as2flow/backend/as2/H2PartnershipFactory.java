@@ -1,7 +1,7 @@
 package com.as2flow.backend.as2;
 
 import com.as2flow.backend.as2.utils.Utils;
-import com.as2flow.backend.entity.Partnership;
+import com.as2flow.backend.entity.PartnershipEntity;
 import com.as2flow.backend.service.PartnershipService;
 import com.helger.as2lib.AbstractDynamicComponent;
 import com.helger.as2lib.exception.AS2Exception;
@@ -72,7 +72,7 @@ public class H2PartnershipFactory extends AbstractDynamicComponent implements IP
     @Override
     public com.helger.as2lib.partner.Partnership getPartnershipByName(@Nullable String sName)
     {
-        List<Partnership> matchingPartnerShips = partnershipService.findAll(sName);
+        List<PartnershipEntity> matchingPartnerShips = partnershipService.findAll(sName);
 
         if (matchingPartnerShips.size() == 0)
             return null;
@@ -127,7 +127,7 @@ public class H2PartnershipFactory extends AbstractDynamicComponent implements IP
     {
         for (final Map.Entry<String, String> entry : allSenderIDs.entrySet())
         {
-            List<Partnership> resultsList = partnershipService.findAll(entry.getKey(), entry.getValue(), PartnershipService.FindBy.SenderAttrs);
+            List<PartnershipEntity> resultsList = partnershipService.findAll(entry.getKey(), entry.getValue(), PartnershipService.FindBy.SenderAttrs);
             if (resultsList.size() == 0) continue;
             return Utils.convertEntityToPartnership(resultsList.get(0));
         }

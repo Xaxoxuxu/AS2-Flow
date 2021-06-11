@@ -1,6 +1,6 @@
 package com.as2flow.backend.service;
 
-import com.as2flow.backend.entity.Partnership;
+import com.as2flow.backend.entity.PartnershipEntity;
 import com.as2flow.backend.repository.PartnershipRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +21,12 @@ public class PartnershipService
         this.partnershipRepository = partnershipRepository;
     }
 
-    public enum FindBy{
+    public enum FindBy
+    {
         SenderAttrs, ReceiverAttrs
     }
 
-    public List<Partnership> findAll(String stringFilter)
+    public List<PartnershipEntity> findAll(String stringFilter)
     {
         if (stringFilter == null || stringFilter.isEmpty())
         {
@@ -35,7 +36,7 @@ public class PartnershipService
         return partnershipRepository.searchByName(stringFilter);
     }
 
-    public List<Partnership> findAll(String key, String value, FindBy findBy)
+    public List<PartnershipEntity> findAll(String key, String value, FindBy findBy)
     {
         if (value == null || value.isEmpty())
         {
@@ -59,20 +60,20 @@ public class PartnershipService
         return partnershipRepository.count();
     }
 
-    public void delete(Partnership partnership)
+    public void delete(PartnershipEntity partnershipEntity)
     {
-        partnershipRepository.delete(partnership);
+        partnershipRepository.delete(partnershipEntity);
     }
 
-    public void save(Partnership partnership)
+    public void save(PartnershipEntity partnershipEntity)
     {
-        if (partnership == null)
+        if (partnershipEntity == null)
         {
             LOGGER.log(Level.SEVERE,
                     "Partnership is null. Are you sure you have connected your form to the application?");
             return;
         }
-        partnershipRepository.save(partnership);
+        partnershipRepository.save(partnershipEntity);
     }
 
     @PostConstruct

@@ -1,6 +1,6 @@
 package com.as2flow.views;
 
-import com.as2flow.backend.entity.Partnership;
+import com.as2flow.backend.entity.PartnershipEntity;
 import com.helger.as2lib.crypto.ECryptoAlgorithmCrypt;
 import com.helger.as2lib.crypto.ECryptoAlgorithmSign;
 import com.vaadin.flow.component.ComponentEvent;
@@ -35,8 +35,8 @@ public class PartnershipForm extends FormLayout
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button close = new Button("Close");
-    Binder<Partnership> binder = new BeanValidationBinder<>(Partnership.class);
-    private Partnership partnership;
+    Binder<PartnershipEntity> binder = new BeanValidationBinder<>(PartnershipEntity.class);
+    private PartnershipEntity partnershipEntity;
 
     public PartnershipForm()
     {
@@ -52,17 +52,17 @@ public class PartnershipForm extends FormLayout
         senderEmail.setPlaceholder("Email");
         receiverEmail.setPlaceholder("Email");
 
-        binder.bind(name, Partnership::getName, null);
-        binder.bind(senderAs2Id, Partnership::getSenderAs2Id, Partnership::setSenderAs2Id);
-        binder.bind(receiverAs2Id, Partnership::getReceiverAs2Id, Partnership::setReceiverAs2Id);
-        binder.bind(as2Url, Partnership::getAs2Url, Partnership::setAs2Url);
-        binder.bind(subject, Partnership::getSubject, Partnership::setSubject);
-        binder.bind(senderX509Alias, Partnership::getSenderX509Alias, Partnership::setSenderX509Alias);
-        binder.bind(receiverX509Alias, Partnership::getReceiverX509Alias, Partnership::setReceiverX509Alias);
-        binder.bind(senderEmail, Partnership::getSenderEmail, Partnership::setSenderEmail);
-        binder.bind(receiverEmail, Partnership::getReceiverEmail, Partnership::setReceiverEmail);
-        binder.bind(cryptoAlgorithm, Partnership::getEncryptAlgorithm, Partnership::setEncryptAlgorithm);
-        binder.bind(signingAlgorithm, Partnership::getSigningAlgorithm, Partnership::setSigningAlgorithm);
+        binder.bind(name, PartnershipEntity::getName, null);
+        binder.bind(senderAs2Id, PartnershipEntity::getSenderAs2Id, PartnershipEntity::setSenderAs2Id);
+        binder.bind(receiverAs2Id, PartnershipEntity::getReceiverAs2Id, PartnershipEntity::setReceiverAs2Id);
+        binder.bind(as2Url, PartnershipEntity::getAs2Url, PartnershipEntity::setAs2Url);
+        binder.bind(subject, PartnershipEntity::getSubject, PartnershipEntity::setSubject);
+        binder.bind(senderX509Alias, PartnershipEntity::getSenderX509Alias, PartnershipEntity::setSenderX509Alias);
+        binder.bind(receiverX509Alias, PartnershipEntity::getReceiverX509Alias, PartnershipEntity::setReceiverX509Alias);
+        binder.bind(senderEmail, PartnershipEntity::getSenderEmail, PartnershipEntity::setSenderEmail);
+        binder.bind(receiverEmail, PartnershipEntity::getReceiverEmail, PartnershipEntity::setReceiverEmail);
+        binder.bind(cryptoAlgorithm, PartnershipEntity::getEncryptAlgorithm, PartnershipEntity::setEncryptAlgorithm);
+        binder.bind(signingAlgorithm, PartnershipEntity::getSigningAlgorithm, PartnershipEntity::setSigningAlgorithm);
 
         cryptoAlgorithm.setItems(ECryptoAlgorithmCrypt.values());
         signingAlgorithm.setItems(ECryptoAlgorithmSign.values());
@@ -86,7 +86,7 @@ public class PartnershipForm extends FormLayout
         close.addClickShortcut(Key.ESCAPE);
 
         save.addClickListener(event -> validateAndSave());
-        delete.addClickListener(event -> fireEvent(new DeleteEvent(this, partnership)));
+        delete.addClickListener(event -> fireEvent(new DeleteEvent(this, partnershipEntity)));
         close.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
         binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
@@ -98,18 +98,18 @@ public class PartnershipForm extends FormLayout
     {
         try
         {
-            binder.writeBean(partnership);
-            fireEvent(new SaveEvent(this, partnership));
+            binder.writeBean(partnershipEntity);
+            fireEvent(new SaveEvent(this, partnershipEntity));
         } catch (ValidationException e)
         {
             e.printStackTrace();
         }
     }
 
-    public void setPartnership(Partnership partnership)
+    public void setPartnership(PartnershipEntity partnershipEntity)
     {
-        this.partnership = partnership;
-        binder.readBean(partnership);
+        this.partnershipEntity = partnershipEntity;
+        binder.readBean(partnershipEntity);
     }
 
     public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
@@ -120,33 +120,33 @@ public class PartnershipForm extends FormLayout
 
     public static abstract class PartnershipFormEvent extends ComponentEvent<PartnershipForm>
     {
-        private final Partnership partnership;
+        private final PartnershipEntity partnershipEntity;
 
-        protected PartnershipFormEvent(PartnershipForm source, Partnership partnership)
+        protected PartnershipFormEvent(PartnershipForm source, PartnershipEntity partnershipEntity)
         {
             super(source, false);
-            this.partnership = partnership;
+            this.partnershipEntity = partnershipEntity;
         }
 
-        public Partnership getPartnership()
+        public PartnershipEntity getPartnership()
         {
-            return partnership;
+            return partnershipEntity;
         }
     }
 
     public static class SaveEvent extends PartnershipFormEvent
     {
-        SaveEvent(PartnershipForm source, Partnership partnership)
+        SaveEvent(PartnershipForm source, PartnershipEntity partnershipEntity)
         {
-            super(source, partnership);
+            super(source, partnershipEntity);
         }
     }
 
     public static class DeleteEvent extends PartnershipFormEvent
     {
-        DeleteEvent(PartnershipForm source, Partnership partnership)
+        DeleteEvent(PartnershipForm source, PartnershipEntity partnershipEntity)
         {
-            super(source, partnership);
+            super(source, partnershipEntity);
         }
 
     }
