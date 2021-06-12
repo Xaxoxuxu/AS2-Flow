@@ -17,6 +17,12 @@ public class AS2Message extends AbstractEntity implements Cloneable
     @NotNull
     private final LocalTime timeProcessed;
 
+    public AS2Message()
+    {
+        partnership = new Partnership();
+        this.timeProcessed = LocalTime.now();
+    }
+
     public AS2Message(Partnership partnership)
     {
         this.partnership = partnership;
